@@ -1,0 +1,8 @@
+.hero h1 {
+  max-width: 920px;
+  font-family: "Russo One", Inter, Arial, sans-serif;
+  font-weight: 400;
+  font-style: oblique;
+  line-height: 1.02;
+  letter-spacing: .01em;
+}

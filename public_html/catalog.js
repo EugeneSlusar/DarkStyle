@@ -1,34 +1,47 @@
-const ozonProducts=[
-  {sku:'3347229013',tag:'LADA PRIORA · 50%',title:'Тонировка съемная 50% для Lada Priora, ВАЗ 2110–2112',price:'1 230 ₽',old:'7 000 ₽'},
-  {sku:'1925249600',tag:'LADA PRIORA · 15%',title:'Тонировка съемная 15% для Lada Priora, ВАЗ 2110–2112',price:'1 225 ₽',old:'5 200 ₽'},
-  {sku:'1925246516',tag:'LADA PRIORA · 5%',title:'Тонировка съемная 5% для Lada Priora, ВАЗ 2110–2112',price:'1 225 ₽',old:'5 200 ₽'},
-  {sku:'1925251241',tag:'LADA PRIORA · 20%',title:'Тонировка съемная 20% для Lada Priora, ВАЗ 2110–2112',price:'1 225 ₽',old:'5 000 ₽'},
-  {sku:'1925252342',tag:'LADA PRIORA · 35%',title:'Тонировка съемная 35% для Lada Priora, ВАЗ 2110–2112',price:'1 230 ₽',old:'5 200 ₽'},
-  {sku:'1920412670',tag:'LADA GRANTA · 5%',title:'Тонировка съемная 5% для Lada Granta, Kalina, Datsun on-Do',price:'1 295 ₽',old:'5 200 ₽'},
-  {sku:'1923293851',tag:'LADA GRANTA · 35%',title:'Тонировка съемная 35% для Lada Granta, Kalina, Datsun on-Do',price:'1 216 ₽',old:'5 200 ₽'},
-  {sku:'1923291784',tag:'LADA GRANTA · 20%',title:'Тонировка съемная 20% для Lada Granta, Kalina, Datsun on-Do',price:'1 388 ₽',old:'5 200 ₽'}
+const ozonProducts=window.ozonCatalog||[];
+const escapeHtml=value=>String(value||'').replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
+const catalogGrid=document.querySelector('.product-grid');
+
+const carGroups=[
+  {id:'vaz-2104-2107',name:'ВАЗ 2104–2107',match:title=>/2107|2105|2104/i.test(title)},
+  {id:'vaz-2109-2114',name:'ВАЗ 2109–2114',match:title=>/2114|2115|2109|21099/i.test(title)},
+  {id:'chevrolet-niva-travel',name:'Chevrolet Niva Travel',match:title=>/Niva Travel|шевроле нива/i.test(title)},
+  {id:'kia-rio-hyundai-solaris',name:'Kia Rio / Hyundai Solaris',match:title=>/Kia Rio|Hyundai Solaris/i.test(title)},
+  {id:'lada-granta-kalina',name:'Lada Granta / Kalina',match:title=>/Granta|Гранта|Kalina|Калина|Datsun/i.test(title)},
+  {id:'lada-niva',name:'Lada Niva',match:title=>/лада Нива|Lada Niva/i.test(title)},
+  {id:'lada-priora',name:'Lada Priora',match:title=>/Priora|Приора|2110|2111|2112/i.test(title)},
+  {id:'lada-vesta',name:'Lada Vesta',match:title=>/Vesta|Веста/i.test(title)}
 ];
 
-const catalogGrid=document.querySelector('.product-grid');
+const renderProduct=product=>{
+  const images=Array.from({length:product.n},(_,index)=>`assets/ozon-products/${product.s}/${String(index+1).padStart(2,'0')}.${index===0?product.e:'jpg'}`);
+  const controls=images.length>1?`<button class="gallery-arrow gallery-prev" type="button" aria-label="Предыдущее фото">‹</button><button class="gallery-arrow gallery-next" type="button" aria-label="Следующее фото">›</button>`:'';
+  const dots=images.length>1?`<div class="gallery-dots">${images.map((src,index)=>`<button type="button" class="gallery-dot${index===0?' active':''}" data-src="${src}" aria-label="Фото ${index+1}"></button>`).join('')}</div>`:'';
+  return `<article class="card product-card" data-sku="${product.s}">
+    <div class="product-gallery"><img class="gallery-main" src="${images[0]}" alt="${escapeHtml(product.t)}" loading="lazy">${controls}${dots}</div>
+    <div class="product-info"><small>OZON · SKU ${product.s}</small><h3>${escapeHtml(product.t)}</h3><p class="price">${product.p}${product.o?` <s>${product.o}</s>`:''}</p><p class="rating">★ Товар продавца «Тёмный стиль»</p><a href="${escapeHtml(product.u)}" target="_blank" rel="noopener">КУПИТЬ НА OZON →</a></div>
+  </article>`;
+};
+
 if(catalogGrid){
-  catalogGrid.innerHTML=ozonProducts.map(product=>{
-    const images=Array.from({length:5},(_,index)=>`assets/ozon-products/${product.sku}/${String(index+1).padStart(2,'0')}.jpg`);
-    return `<article class="card product-card" data-sku="${product.sku}">
-      <div class="product-gallery">
-        <img class="gallery-main" src="${images[0]}" alt="${product.title}" loading="lazy">
-        <button class="gallery-arrow gallery-prev" type="button" aria-label="Предыдущее фото">‹</button>
-        <button class="gallery-arrow gallery-next" type="button" aria-label="Следующее фото">›</button>
-        <div class="gallery-dots">${images.map((src,index)=>`<button type="button" class="gallery-dot${index===0?' active':''}" data-src="${src}" aria-label="Фото ${index+1}"></button>`).join('')}</div>
-      </div>
-      <div class="product-info"><small>${product.tag}</small><h3>${product.title}</h3><p class="price">${product.price} <s>${product.old}</s></p><p class="rating">★ Оригинальные фотографии Ozon</p><a href="https://www.ozon.ru/product/${product.sku}/" target="_blank" rel="noopener">КУПИТЬ НА OZON →</a></div>
-    </article>`;
+  const tagCloud=document.createElement('nav');
+  tagCloud.className='catalog-tags';
+  tagCloud.setAttribute('aria-label','Марки автомобилей');
+  tagCloud.innerHTML=`<span class="catalog-tags-label">Выберите автомобиль</span><div class="catalog-tags-list">${carGroups.map(group=>`<a href="#${group.id}">${group.name}</a>`).join('')}</div>`;
+  catalogGrid.before(tagCloud);
+
+  catalogGrid.innerHTML=carGroups.map((group,index)=>{
+    const products=ozonProducts.filter(product=>group.match(product.t));
+    if(!products.length)return '';
+    return `<header class="catalog-group-title" id="${group.id}"><span>${String(index+1).padStart(2,'0')}</span><h3>${group.name}</h3><small>${products.length} ${products.length===4?'товара':'товаров'}</small></header>${products.map(renderProduct).join('')}`;
   }).join('');
 
   catalogGrid.addEventListener('click',event=>{
     const card=event.target.closest('.product-card');
     if(!card)return;
     const dots=[...card.querySelectorAll('.gallery-dot')];
-    let index=dots.findIndex(dot=>dot.classList.contains('active'));
+    if(!dots.length)return;
+    let index=Math.max(0,dots.findIndex(dot=>dot.classList.contains('active')));
     const selected=event.target.closest('.gallery-dot');
     if(selected)index=dots.indexOf(selected);
     else if(event.target.closest('.gallery-next'))index=(index+1)%dots.length;
