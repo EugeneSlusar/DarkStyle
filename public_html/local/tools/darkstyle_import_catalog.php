@@ -116,7 +116,14 @@ require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_after.p
                 throw new Error('Не удалось обновить сессию. Обновите страницу.');
             }
 
-            form.elements.sessid.value = payload.sessid;
+            let sessidInput = form.querySelector('input[name="sessid"]');
+            if (!sessidInput) {
+                sessidInput = document.createElement('input');
+                sessidInput.type = 'hidden';
+                sessidInput.name = 'sessid';
+                form.appendChild(sessidInput);
+            }
+            sessidInput.value = payload.sessid;
             button.textContent = 'ИМПОРТИРУЕМ ТОВАРЫ…';
             HTMLFormElement.prototype.submit.call(form);
         } catch (error) {
