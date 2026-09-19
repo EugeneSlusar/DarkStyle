@@ -1,13 +1,31 @@
-<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die(); ?>
+<?php if (!empty($arResult['ERROR'])): ?>
+<section class="section checkout-page">
+    <div class="wrap checkout-error">
+        <span class="number">ОШИБКА</span>
+        <h1><?=htmlspecialcharsbx($arResult['ERROR'])?></h1>
+        <a class="button cyan" href="/catalog/">ВЕРНУТЬСЯ В КАТАЛОГ →</a>
+    </div>
+</section>
+<?php return; endif; ?>
+<?php
 $product = $arResult['PRODUCT'];
-$modalId = 'checkout-' . (int) $product['ID'];
+$image = $product['IMAGE'] ?: SITE_TEMPLATE_PATH . '/assets/product-placeholder.svg';
 ?>
-<button class="button buy-button" type="button" data-checkout-open="<?=$modalId?>">КУПИТЬ →</button>
-<div class="checkout-modal" id="<?=$modalId?>" hidden aria-hidden="true">
-    <div class="checkout-backdrop" data-checkout-close></div>
-    <div class="checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="<?=$modalId?>-title">
-        <button class="checkout-close" type="button" data-checkout-close aria-label="Закрыть">×</button>
-        <div class="checkout-heading"><span class="number">ОФОРМЛЕНИЕ ЗАКАЗА</span><h2 id="<?=$modalId?>-title"><?=htmlspecialcharsbx($product['NAME'])?></h2><p><?=number_format($product['PRICE'], 0, ',', ' ')?> ₽ без доставки</p></div>
+<section class="section checkout-page">
+    <div class="wrap">
+        <nav class="breadcrumbs"><a href="/catalog/">Каталог</a><span>→</span><a href="<?=htmlspecialcharsbx($product['URL'])?>"><?=htmlspecialcharsbx($product['NAME'])?></a><span>→</span><span>Оформление</span></nav>
+        <div class="checkout-page-head"><span class="number">ОФОРМЛЕНИЕ ЗАКАЗА</span><h1>Проверьте товар<br>и заполните данные</h1></div>
+        <div class="checkout-layout">
+            <aside class="checkout-product">
+                <a href="<?=htmlspecialcharsbx($product['URL'])?>"><img class="checkout-product-image" src="<?=htmlspecialcharsbx($image)?>" alt="<?=htmlspecialcharsbx($product['NAME'])?>"></a>
+                <small><?=htmlspecialcharsbx($product['SECTION']['NAME'])?><?= $product['ARTICLE'] !== '' ? ' · ' . htmlspecialcharsbx($product['ARTICLE']) : '' ?></small>
+                <h2><a href="<?=htmlspecialcharsbx($product['URL'])?>"><?=htmlspecialcharsbx($product['NAME'])?></a></h2>
+                <p class="checkout-product-price"><?=number_format($product['PRICE'], 0, ',', ' ')?> ₽ <span>без доставки</span></p>
+                <a class="checkout-product-back" href="<?=htmlspecialcharsbx($product['URL'])?>">← Вернуться к товару</a>
+            </aside>
+            <div class="checkout-panel">
+                <div class="checkout-heading"><span class="number">ДАННЫЕ ПОКУПАТЕЛЯ</span><h2>Куда доставить заказ</h2><p>Стоимость доставки рассчитаем по адресу</p></div>
         <form class="checkout-form" novalidate>
             <?php bitrix_sessid_post(); ?>
             <input type="hidden" name="product_id" value="<?=(int) $product['ID']?>">
@@ -21,6 +39,8 @@ $modalId = 'checkout-' . (int) $product['ID'];
             <button class="button magenta checkout-submit" type="submit" disabled>ОФОРМИТЬ ЗАКАЗ</button>
             <small>Нажимая кнопку, вы соглашаетесь на обработку данных для оформления заказа.</small>
         </form>
-        <div class="checkout-success" hidden><span class="number">ГОТОВО</span><h2>Заказ принят</h2><p>Номер заказа: <strong></strong>. Менеджер свяжется с вами для подтверждения.</p><button class="button cyan" type="button" data-checkout-close>ЗАКРЫТЬ</button></div>
+                <div class="checkout-success" hidden><span class="number">ГОТОВО</span><h2>Заказ принят</h2><p>Номер заказа: <strong></strong>. Менеджер свяжется с вами для подтверждения.</p><a class="button cyan" href="/catalog/">ВЕРНУТЬСЯ В КАТАЛОГ →</a></div>
+            </div>
+        </div>
     </div>
-</div>
+</section>

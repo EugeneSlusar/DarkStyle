@@ -16,7 +16,11 @@ $asset->addCss('/hero-title.css');
 $asset->addCss('/products.css');
 $asset->addCss($templatePath . '/template_styles.css');
 $asset->addJs($templatePath . '/script.js');
-$asset->addJs($templatePath . '/checkout.js');
+$requestPath = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+if (preg_match('#^/order(?:/|$)#', $requestPath)) {
+    $asset->addCss($templatePath . '/order.css');
+    $asset->addJs($templatePath . '/checkout.js');
+}
 $siteName = (string) Config::get('site_name', 'Тёмный стиль');
 ?>
 <!doctype html>

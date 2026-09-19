@@ -21,7 +21,7 @@ $images = $item['GALLERY'] ?: [SITE_TEMPLATE_PATH . '/assets/product-placeholder
                     <?php if ($item['WEIGHT'] > 0): ?><div><dt>Вес</dt><dd><?=number_format($item['WEIGHT'], 0, ',', ' ')?> г</dd></div><?php endif; ?>
                     <?php if ($item['LENGTH'] > 0): ?><div><dt>Размер упаковки</dt><dd><?=htmlspecialcharsbx($item['LENGTH'] . ' × ' . $item['WIDTH'] . ' × ' . $item['HEIGHT'])?> см</dd></div><?php endif; ?>
                 </dl>
-                <?php $APPLICATION->IncludeComponent('darkstyle:checkout', '', ['PRODUCT_ID' => $item['ID']], $component); ?>
+                <a class="button buy-button" href="/order/?product=<?=(int) $item['ID']?>">КУПИТЬ →</a>
             </div>
         </div>
     </div>

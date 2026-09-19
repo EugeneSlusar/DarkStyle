@@ -1,23 +1,6 @@
 document.addEventListener('DOMContentLoaded',()=>{
   const endpoint='/local/ajax/darkstyle-checkout.php';
   const money=value=>`${new Intl.NumberFormat('ru-RU').format(Number(value)||0)} ₽`;
-  const setModal=(modal,open)=>{
-    modal.hidden=!open;
-    modal.setAttribute('aria-hidden',String(!open));
-    document.body.classList.toggle('checkout-open',open);
-    if(open)setTimeout(()=>modal.querySelector('input:not([type="hidden"])')?.focus(),20);
-  };
-
-  document.addEventListener('click',event=>{
-    const opener=event.target.closest('[data-checkout-open]');
-    if(opener){const modal=document.getElementById(opener.dataset.checkoutOpen);if(modal)setModal(modal,true);return;}
-    const closer=event.target.closest('[data-checkout-close]');
-    if(closer){const modal=closer.closest('.checkout-modal');if(modal)setModal(modal,false);}
-  });
-
-  document.addEventListener('keydown',event=>{
-    if(event.key==='Escape'){const modal=document.querySelector('.checkout-modal:not([hidden])');if(modal)setModal(modal,false);}
-  });
 
   document.querySelectorAll('.checkout-form').forEach(form=>{
     const options=form.querySelector('.delivery-options');
@@ -58,11 +41,12 @@ document.addEventListener('DOMContentLoaded',()=>{
       event.preventDefault();message.textContent='';submit.disabled=true;submit.textContent='ОФОРМЛЯЕМ…';
       try{
         const payload=await request('order');
-        const modal=form.closest('.checkout-modal');
+        const panel=form.closest('.checkout-panel');
         form.hidden=true;
-        const success=modal.querySelector('.checkout-success');
+        const success=panel.querySelector('.checkout-success');
         success.querySelector('strong').textContent=payload.orderId;
         success.hidden=false;
+        success.scrollIntoView({behavior:'smooth',block:'center'});
       }catch(error){message.textContent=error.message;submit.disabled=false;submit.textContent='ОФОРМИТЬ ЗАКАЗ';}
     });
   });
