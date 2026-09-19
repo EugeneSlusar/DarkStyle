@@ -40,11 +40,30 @@ jobs:
         run: |
           set -euo pipefail
           install -d -m 700 "$HOME/.ssh"
-          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' | sed \
-            '/^----- BEGIN DEPLOY_SSH_KEY -----$/d; /^----- END DEPLOY_SSH_KEY -----$/d' \
-            > "$HOME/.ssh/deploy_key"
+
+          key_value="${DEPLOY_SSH_KEY//$'\r'/}"
+          if [[ "$key_value" != *$'\n'* && "$key_value" == *'\n'* ]]; then
+            key_value="${key_value//\\n/$'\n'}"
+          fi
+
+          key_value="$(printf '%s\n' "$key_value" | sed \
+            '/^----- BEGIN DEPLOY_SSH_KEY -----$/d; /^----- END DEPLOY_SSH_KEY -----$/d')"
+
+          if [[ "$key_value" == *"PRIVATE KEY-----"* ]]; then
+            printf '%s\n' "$key_value" > "$HOME/.ssh/deploy_key"
+          elif ! printf '%s' "$key_value" | base64 --decode > "$HOME/.ssh/deploy_key"; then
+            echo "DEPLOY_SSH_KEY must contain an OpenSSH/PEM private key or its Base64 representation" >&2
+            exit 1
+          fi
+
           chmod 600 "$HOME/.ssh/deploy_key"
-          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
+
+          known_hosts_value="${DEPLOY_KNOWN_HOSTS//$'\r'/}"
+          if [[ "$known_hosts_value" != *$'\n'* && "$known_hosts_value" == *'\n'* ]]; then
+            known_hosts_value="${known_hosts_value//\\n/$'\n'}"
+          fi
+          printf '%s\n' "$known_hosts_value" > "$HOME/.ssh/known_hosts"
           chmod 644 "$HOME/.ssh/known_hosts"
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
