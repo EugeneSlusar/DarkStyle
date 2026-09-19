@@ -1,4 +1,4 @@
-const ozonProducts=window.ozonCatalog||[];
+const catalogProducts=window.darkStyleCatalog||[];
 const escapeHtml=value=>String(value||'').replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
 const catalogGrid=document.querySelector('.product-grid');
 
@@ -13,13 +13,13 @@ const carGroups=[
   {id:'lada-vesta',name:'Lada Vesta',match:title=>/Vesta|Веста/i.test(title)}
 ];
 
-const renderProduct=product=>{
-  const images=Array.from({length:product.n},(_,index)=>`assets/ozon-products/${product.s}/${String(index+1).padStart(2,'0')}.${index===0?product.e:'jpg'}`);
+const renderProduct=(product,group)=>{
+  const images=Array.from({length:product.n},(_,index)=>`assets/catalog-products/${product.s}/${String(index+1).padStart(2,'0')}.${index===0?product.e:'jpg'}`);
   const controls=images.length>1?`<button class="gallery-arrow gallery-prev" type="button" aria-label="Предыдущее фото">‹</button><button class="gallery-arrow gallery-next" type="button" aria-label="Следующее фото">›</button>`:'';
   const dots=images.length>1?`<div class="gallery-dots">${images.map((src,index)=>`<button type="button" class="gallery-dot${index===0?' active':''}" data-src="${src}" aria-label="Фото ${index+1}"></button>`).join('')}</div>`:'';
   return `<article class="card product-card" data-sku="${product.s}">
     <div class="product-gallery"><img class="gallery-main" src="${images[0]}" alt="${escapeHtml(product.t)}" loading="lazy">${controls}${dots}</div>
-    <div class="product-info"><small>OZON · SKU ${product.s}</small><h3>${escapeHtml(product.t)}</h3><p class="price">${product.p}${product.o?` <s>${product.o}</s>`:''}</p><p class="rating">★ Товар продавца «Тёмный стиль»</p><a href="${escapeHtml(product.u)}" target="_blank" rel="noopener">КУПИТЬ НА OZON →</a></div>
+    <div class="product-info"><small>АРТИКУЛ ${product.s}</small><h3>${escapeHtml(product.t)}</h3><p class="price">${product.p}${product.o?` <s>${product.o}</s>`:''}</p><p class="rating">★ Товар бренда «Тёмный стиль»</p><a href="/catalog/${group.id}/product-${product.s}/">ПОДРОБНЕЕ →</a></div>
   </article>`;
 };
 
@@ -31,9 +31,9 @@ if(catalogGrid){
   catalogGrid.before(tagCloud);
 
   catalogGrid.innerHTML=carGroups.map((group,index)=>{
-    const products=ozonProducts.filter(product=>group.match(product.t));
+    const products=catalogProducts.filter(product=>group.match(product.t));
     if(!products.length)return '';
-    return `<header class="catalog-group-title" id="${group.id}"><span>${String(index+1).padStart(2,'0')}</span><h3>${group.name}</h3><small>${products.length} ${products.length===4?'товара':'товаров'}</small></header>${products.map(renderProduct).join('')}`;
+    return `<header class="catalog-group-title" id="${group.id}"><span>${String(index+1).padStart(2,'0')}</span><h3>${group.name}</h3><small>${products.length} ${products.length===4?'товара':'товаров'}</small></header>${products.map(product=>renderProduct(product,group)).join('')}`;
   }).join('');
 
   catalogGrid.addEventListener('click',event=>{
