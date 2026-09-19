@@ -13,6 +13,16 @@ if (!$USER->IsAdmin()) {
     die('Доступ разрешён только администратору.');
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'session') {
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    echo json_encode([
+        'success' => true,
+        'sessid' => bitrix_sessid(),
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
 @set_time_limit(0);
 $sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/catalog-data.js';
 $imagesRoot = $_SERVER['DOCUMENT_ROOT'] . '/assets/catalog-products';
@@ -67,7 +77,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_after.p
         <p><a href="/catalog/" target="_blank" style="color:#00f2ff">Открыть каталог →</a></p>
     <?php endif; ?>
 
-    <form method="post" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px">
+    <form id="darkstyle-catalog-import" method="post" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px">
         <?php bitrix_sessid_post(); ?>
         <label>Вес по умолчанию, г<input name="weight" type="number" min="1" value="700" required style="display:block;width:100%;padding:10px"></label>
         <label>Длина упаковки, см<input name="length" type="number" min="1" value="80" required style="display:block;width:100%;padding:10px"></label>
@@ -79,4 +89,42 @@ require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_after.p
         <button type="submit" style="grid-column:1/-1;padding:15px;border:0;background:#00f2ff;color:#000;font-weight:bold;cursor:pointer">ИМПОРТИРОВАТЬ <?= (int) $sourceCount ?> ТОВАРОВ</button>
     </form>
 </div>
+<script>
+(function () {
+    const form = document.getElementById('darkstyle-catalog-import');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const button = form.querySelector('button[type="submit"]');
+        if (button.disabled) return;
+
+        const initialText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'ПОЛУЧАЕМ СВЕЖУЮ СЕССИЮ…';
+
+        try {
+            const response = await fetch(location.pathname + '?action=session&_=' + Date.now(), {
+                method: 'GET',
+                credentials: 'same-origin',
+                cache: 'no-store',
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            });
+            const payload = await response.json();
+            if (!response.ok || !payload.success || !payload.sessid) {
+                throw new Error('Не удалось обновить сессию. Обновите страницу.');
+            }
+
+            form.elements.sessid.value = payload.sessid;
+            button.textContent = 'ИМПОРТИРУЕМ ТОВАРЫ…';
+            HTMLFormElement.prototype.submit.call(form);
+        } catch (error) {
+            button.disabled = false;
+            button.textContent = initialText;
+            alert(error.message || 'Не удалось запустить импорт.');
+        }
+    });
+})();
+</script>
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/epilog.php'; ?>
