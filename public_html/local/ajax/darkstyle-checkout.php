@@ -21,6 +21,7 @@ use DarkStyle\Order\OrderDataValidator;
 use DarkStyle\Order\OrderService;
 
 header('Content-Type: application/json; charset=UTF-8');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 $respond = static function (array $payload, int $status = 200): never {
     http_response_code($status);
@@ -30,6 +31,9 @@ $respond = static function (array $payload, int $status = 200): never {
 
 try {
     $request = Context::getCurrent()->getRequest();
+    if (!$request->isPost() && (string) $request->getQuery('action') === 'session') {
+        $respond(['success' => true, 'sessid' => bitrix_sessid()]);
+    }
     if (!$request->isPost() || !check_bitrix_sessid()) {
         $respond(['success' => false, 'error' => 'Сессия истекла. Обновите страницу.'], 403);
     }

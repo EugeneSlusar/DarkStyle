@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     const calculate=form.querySelector('.checkout-calculate');
 
     const request=async action=>{
-      const data=new FormData(form);data.set('action',action);
+      const sessionResponse=await fetch(`${endpoint}?action=session&_=${Date.now()}`,{credentials:'same-origin',cache:'no-store'});
+      const sessionPayload=await sessionResponse.json().catch(()=>({success:false}));
+      if(!sessionResponse.ok||!sessionPayload.success||!sessionPayload.sessid)throw new Error('Не удалось обновить сессию. Перезагрузите страницу.');
+      const data=new FormData(form);data.set('action',action);data.set('sessid',sessionPayload.sessid);
       const response=await fetch(endpoint,{method:'POST',body:data,credentials:'same-origin',headers:{'X-Requested-With':'XMLHttpRequest'}});
       const payload=await response.json().catch(()=>({success:false,error:'Некорректный ответ сервера.'}));
       if(!response.ok||!payload.success)throw new Error(payload.error||'Не удалось выполнить запрос.');
