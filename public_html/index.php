@@ -1,0 +1,28 @@
+<?php
+require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/header.php';
+$APPLICATION->SetTitle('Съёмная тонировка для авто');
+
+$include = static function (string $file, string $name) use ($APPLICATION): void {
+    $APPLICATION->IncludeFile(
+        '/include/home/' . $file,
+        [],
+        ['MODE' => 'html', 'NAME' => $name, 'SHOW_BORDER' => true]
+    );
+};
+
+$include('hero.php', 'Главный экран');
+$include('benefits.php', 'Преимущества');
+?>
+<section class="section catalog" id="katalog">
+    <div class="wrap">
+        <?php $include('catalog-heading.php', 'Заголовок каталога'); ?>
+        <?php $APPLICATION->IncludeComponent('darkstyle:catalog', '', ['MODE' => 'home', 'LIMIT' => 8, 'CACHE_TIME' => 3600]); ?>
+        <div class="home-catalog-footer"><a class="button" href="/catalog/">Открыть весь каталог →</a></div>
+    </div>
+</section>
+<?php
+$include('portfolio.php', 'Портфолио');
+$include('process.php', 'Применение');
+$include('faq.php', 'Вопросы и ответы');
+$include('order-cta.php', 'Призыв к заказу');
+require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/footer.php';

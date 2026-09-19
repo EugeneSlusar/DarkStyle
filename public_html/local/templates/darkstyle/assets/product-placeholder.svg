@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Нет изображения">
+  <rect width="800" height="600" fill="#111"/>
+  <path d="M170 390h460l-45-115-90-55H305l-90 55z" fill="none" stroke="#333" stroke-width="18"/>
+  <circle cx="265" cy="405" r="48" fill="#0a0a0a" stroke="#00f2ff" stroke-width="9"/>
+  <circle cx="535" cy="405" r="48" fill="#0a0a0a" stroke="#ff00ff" stroke-width="9"/>
+  <text x="400" y="510" fill="#777" font-family="Arial,sans-serif" font-size="28" text-anchor="middle">ТЁМНЫЙ СТИЛЬ</text>
+</svg>

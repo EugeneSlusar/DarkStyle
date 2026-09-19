@@ -5,3 +5,6 @@
 .env.*
 
 *.log
+
+# Per-installation Bitrix settings and credentials.
+public_html/local/php_interface/darkstyle/config.local.php
