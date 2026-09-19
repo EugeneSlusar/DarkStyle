@@ -13,7 +13,7 @@ $products = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 $sections = (new ReflectionClass(CatalogImportService::class))->getReflectionConstant('SECTIONS')->getValue();
 
 assert(count($products) === 38);
-assert(stripos($content, 'ozon') === false);
+assert(preg_match('~https?://~i', $content) === 0);
 
 foreach ($products as $product) {
     assert(!isset($product['u']));
