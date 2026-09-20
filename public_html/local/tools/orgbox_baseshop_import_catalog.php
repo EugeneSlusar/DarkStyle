@@ -31,7 +31,7 @@ $error = '';
 $sourceCount = 0;
 
 try {
-    $importer = new CatalogImportService((int) Config::get('products_iblock_id', 0));
+    $importer = new CatalogImportService(Config::getIblockId('products'));
     $sourceCount = count($importer->readSource($sourceFile));
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

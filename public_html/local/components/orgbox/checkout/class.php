@@ -14,7 +14,7 @@ class OrgBoxBaseShopCheckoutComponent extends CBitrixComponent
     public function executeComponent(): void
     {
         try {
-            $repository = new ProductRepository((int) Config::get('products_iblock_id', 0));
+            $repository = new ProductRepository(Config::getIblockId('products'));
             $product = $repository->getProductById((int) ($this->arParams['PRODUCT_ID'] ?? 0));
             if ($product === null) {
                 \CHTTP::SetStatus('404 Not Found');

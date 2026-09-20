@@ -42,8 +42,8 @@ try {
     }
 
     $service = new OrderService(
-        new ProductRepository((int) Config::get('products_iblock_id', 0)),
-        new IblockOrderRepository((int) Config::get('orders_iblock_id', 0)),
+        new ProductRepository(Config::getIblockId('products')),
+        new IblockOrderRepository(Config::getIblockId('orders')),
         new DeliveryManager(new CdekDeliveryProvider(), new RussianPostDeliveryProvider()),
         new EmailOrderNotifier((string) Config::get('manager_email', '')),
         new OrderDataValidator()
