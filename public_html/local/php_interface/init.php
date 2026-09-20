@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 use Bitrix\Main\Loader;
 
+$migrationFile = __DIR__ . '/orgbox_baseshop/migrate_once.php';
+if (is_file($migrationFile)) {
+    require $migrationFile;
+}
+
 Loader::registerNamespace(
     'OrgBox\\BaseShop\\',
     __DIR__ . '/lib/OrgBox/BaseShop'
