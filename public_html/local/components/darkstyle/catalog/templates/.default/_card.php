@@ -1,6 +1,6 @@
 <?php
 /** @var array $item */
-$image = $item['IMAGE'] ?: SITE_TEMPLATE_PATH . '/assets/product-placeholder.svg';
+$image = $item['IMAGE'] ?: '/local/assets/product-placeholder.svg';
 ?>
 <article class="card product-card">
     <a class="product-gallery" href="<?=htmlspecialcharsbx($item['URL'])?>">

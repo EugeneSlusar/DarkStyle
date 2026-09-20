@@ -14,7 +14,7 @@ const carGroups=[
 ];
 
 const renderProduct=(product,group)=>{
-  const images=Array.from({length:product.n},(_,index)=>`assets/catalog-products/${product.s}/${String(index+1).padStart(2,'0')}.${index===0?product.e:'jpg'}`);
+  const images=Array.from({length:product.n},(_,index)=>`/local/assets/catalog-products/${product.s}/${String(index+1).padStart(2,'0')}.${index===0?product.e:'jpg'}`);
   const controls=images.length>1?`<button class="gallery-arrow gallery-prev" type="button" aria-label="Предыдущее фото">‹</button><button class="gallery-arrow gallery-next" type="button" aria-label="Следующее фото">›</button>`:'';
   const dots=images.length>1?`<div class="gallery-dots">${images.map((src,index)=>`<button type="button" class="gallery-dot${index===0?' active':''}" data-src="${src}" aria-label="Фото ${index+1}"></button>`).join('')}</div>`:'';
   return `<article class="card product-card" data-sku="${product.s}">

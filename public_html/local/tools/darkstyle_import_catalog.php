@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'session
 }
 
 @set_time_limit(0);
-$sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/catalog-data.js';
-$imagesRoot = $_SERVER['DOCUMENT_ROOT'] . '/assets/catalog-products';
+$sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/local/js/catalog-data.js';
+$imagesRoot = $_SERVER['DOCUMENT_ROOT'] . '/local/assets/catalog-products';
 $result = null;
 $error = '';
 $sourceCount = 0;

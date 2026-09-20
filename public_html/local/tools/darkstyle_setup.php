@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             $sectionId = (int) $section->Add(['IBLOCK_ID' => $productsId, 'ACTIVE' => 'Y', 'NAME' => 'Lada Niva', 'CODE' => 'lada-niva']);
             if ($sectionId > 0) {
                 $element = new \CIBlockElement();
-                $picturePath = $_SERVER['DOCUMENT_ROOT'] . '/assets/products/product-01.jpg';
+                $picturePath = $_SERVER['DOCUMENT_ROOT'] . '/local/assets/products/product-01.jpg';
                 $element->Add([
                     'IBLOCK_ID' => $productsId,
                     'IBLOCK_SECTION_ID' => $sectionId,

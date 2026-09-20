@@ -9,17 +9,16 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-$templatePath = SITE_TEMPLATE_PATH;
 $asset = Asset::getInstance();
-$asset->addCss('/style.css');
-$asset->addCss('/hero-title.css');
-$asset->addCss('/products.css');
-$asset->addCss($templatePath . '/template_styles.css');
-$asset->addJs($templatePath . '/script.js');
+$asset->addCss('/local/css/style.css');
+$asset->addCss('/local/css/hero-title.css');
+$asset->addCss('/local/css/products.css');
+$asset->addCss('/local/css/template.css');
+$asset->addJs('/local/js/site.js');
 $requestPath = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 if (preg_match('#^/order(?:/|$)#', $requestPath)) {
-    $asset->addCss($templatePath . '/order.css');
-    $asset->addJs($templatePath . '/checkout.js');
+    $asset->addCss('/local/css/order.css');
+    $asset->addJs('/local/js/checkout.js');
 }
 $siteName = (string) Config::get('site_name', 'Тёмный стиль');
 ?>

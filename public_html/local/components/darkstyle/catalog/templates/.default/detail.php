@@ -1,7 +1,7 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 global $APPLICATION;
 $item = $arResult['ITEM'];
-$images = $item['GALLERY'] ?: [SITE_TEMPLATE_PATH . '/assets/product-placeholder.svg'];
+$images = $item['GALLERY'] ?: ['/local/assets/product-placeholder.svg'];
 ?>
 <section class="section product-detail">
     <div class="wrap">

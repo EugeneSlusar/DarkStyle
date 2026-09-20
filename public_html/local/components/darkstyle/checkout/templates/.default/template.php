@@ -10,7 +10,7 @@
 <?php return; endif; ?>
 <?php
 $product = $arResult['PRODUCT'];
-$image = $product['IMAGE'] ?: SITE_TEMPLATE_PATH . '/assets/product-placeholder.svg';
+$image = $product['IMAGE'] ?: '/local/assets/product-placeholder.svg';
 ?>
 <section class="section checkout-page">
     <div class="wrap">
