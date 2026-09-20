@@ -1,0 +1,11 @@
+.orgbox-baseshop {
+    --theme-background: #0a0a0a;
+    --theme-surface: #111;
+    --theme-border: #242424;
+    --theme-muted: #888;
+    --theme-primary: #00f2ff;
+    --theme-accent: #ff00ff;
+    --theme-text: #fff;
+    --theme-font-body: Inter, Arial, sans-serif;
+    --theme-font-display: "Russo One", Inter, Arial, sans-serif;
+}

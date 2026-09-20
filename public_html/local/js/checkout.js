@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded',()=>{
-  const endpoint='/local/ajax/darkstyle-checkout.php';
+  const endpoint='/local/ajax/orgbox-baseshop-checkout.php';
   const money=value=>`${new Intl.NumberFormat('ru-RU').format(Number(value)||0)} ₽`;
 
   document.querySelectorAll('.checkout-form').forEach(form=>{

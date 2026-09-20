@@ -1,7 +1,7 @@
 <?php
 
 $arComponentDescription = [
-    'NAME' => 'Каталог «Тёмный стиль»',
-    'DESCRIPTION' => 'Каталог товаров из инфоблока без модуля catalog.',
-    'PATH' => ['ID' => 'darkstyle', 'NAME' => 'Тёмный стиль'],
+    'NAME' => 'Каталог товаров (совместимость)',
+    'DESCRIPTION' => 'Переходный компонент. Используйте orgbox:catalog.',
+    'PATH' => ['ID' => 'orgbox', 'NAME' => 'orgBox: BaseShop'],
 ];

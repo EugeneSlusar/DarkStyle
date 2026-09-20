@@ -1,7 +1,7 @@
 <?php
 
 $arComponentDescription = [
-    'NAME' => 'Оформление заказа «Тёмный стиль»',
-    'DESCRIPTION' => 'Страница оформления заказа одного товара.',
-    'PATH' => ['ID' => 'darkstyle', 'NAME' => 'Тёмный стиль'],
+    'NAME' => 'Оформление заказа (совместимость)',
+    'DESCRIPTION' => 'Переходный компонент. Используйте orgbox:checkout.',
+    'PATH' => ['ID' => 'orgbox', 'NAME' => 'orgBox: BaseShop'],
 ];

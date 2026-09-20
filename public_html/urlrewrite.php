@@ -4,7 +4,7 @@ $arUrlRewrite = [
     [
         'CONDITION' => '#^/catalog/#',
         'RULE' => '',
-        'ID' => 'darkstyle:catalog',
+        'ID' => 'orgbox:catalog',
         'PATH' => '/catalog/index.php',
         'SORT' => 100,
     ],

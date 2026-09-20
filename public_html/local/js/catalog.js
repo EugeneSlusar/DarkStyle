@@ -1,4 +1,4 @@
-const catalogProducts=window.darkStyleCatalog||[];
+const catalogProducts=window.orgboxBaseShopCatalog||[];
 const escapeHtml=value=>String(value||'').replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
 const catalogGrid=document.querySelector('.product-grid');
 
@@ -19,7 +19,7 @@ const renderProduct=(product,group)=>{
   const dots=images.length>1?`<div class="gallery-dots">${images.map((src,index)=>`<button type="button" class="gallery-dot${index===0?' active':''}" data-src="${src}" aria-label="Фото ${index+1}"></button>`).join('')}</div>`:'';
   return `<article class="card product-card" data-sku="${product.s}">
     <div class="product-gallery"><img class="gallery-main" src="${images[0]}" alt="${escapeHtml(product.t)}" loading="lazy">${controls}${dots}</div>
-    <div class="product-info"><small>АРТИКУЛ ${product.s}</small><h3>${escapeHtml(product.t)}</h3><p class="price">${product.p}${product.o?` <s>${product.o}</s>`:''}</p><p class="rating">★ Товар бренда «Тёмный стиль»</p><a href="/catalog/${group.id}/product-${product.s}/">ПОДРОБНЕЕ →</a></div>
+    <div class="product-info"><small>АРТИКУЛ ${product.s}</small><h3>${escapeHtml(product.t)}</h3><p class="price">${product.p}${product.o?` <s>${product.o}</s>`:''}</p><p class="rating">★ В наличии</p><a href="/catalog/${group.id}/product-${product.s}/">ПОДРОБНЕЕ →</a></div>
   </article>`;
 };
 

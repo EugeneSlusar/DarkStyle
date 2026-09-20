@@ -1,6 +1,6 @@
-.darkstyle-site .hero h1 {
+.orgbox-baseshop .hero h1 {
   max-width: 920px;
-  font-family: "Russo One", Inter, Arial, sans-serif;
+  font-family: var(--theme-font-display);
   font-weight: 400;
   font-style: oblique;
   line-height: 1.02;

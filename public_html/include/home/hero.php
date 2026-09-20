@@ -6,7 +6,7 @@
         <div class="eyebrow"><span></span> НОВЫЙ УРОВЕНЬ ПРИВАТНОСТИ</div>
         <h1>Съёмная тонировка:<br><em>Твой стиль</em> без границ</h1>
         <p>Измени облик авто за считанные минуты и верни заводской вид в любой момент.</p>
-        <div class="hero-actions"><a class="button cyan" href="/catalog/">Смотреть каталог <b>→</b></a><a class="text-link" href="#primenenie">Как это работает <b>↘</b></a></div>
+        <div class="hero-actions"><a class="button primary" href="/catalog/">Смотреть каталог <b>→</b></a><a class="text-link" href="#primenenie">Как это работает <b>↘</b></a></div>
     </div>
     <div class="scroll">SCROLL TO EXPLORE <span>↓</span></div>
 </section>

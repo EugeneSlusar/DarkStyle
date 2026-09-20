@@ -38,8 +38,8 @@
 
 - Товары и разделы: штатный инфоблок Bitrix.
 - Заказы: отдельный инфоблок, без модулей `sale` и `catalog`.
-- Представление: шаблон `local/templates/darkstyle` и компоненты `darkstyle:catalog`, `darkstyle:checkout`.
-- Бизнес-логика: PHP-классы `DarkStyle\Catalog`, `DarkStyle\Order`, `DarkStyle\Delivery`, `DarkStyle\Notification`.
+- Представление: шаблон `local/templates/orgbox_baseshop` и компоненты `orgbox:catalog`, `orgbox:checkout`.
+- Бизнес-логика: PHP-классы `Orgbox\BaseShop\Catalog`, `Orgbox\BaseShop\Order`, `Orgbox\BaseShop\Delivery`, `Orgbox\BaseShop\Notification`.
 - Интеграции: провайдеры доставки за единым контрактом; до выдачи credentials работают прозрачные fallback-тарифы.
 - Настройки: Bitrix options, переменные окружения либо игнорируемый `config.local.php`.
 - Инициализация: одноразовый admin-only скрипт создаёт тип инфоблоков, инфоблоки и свойства.
@@ -48,7 +48,7 @@
 
 1. Подключить существующий дизайн как Bitrix-шаблон.
 2. Добавить инфоблочный каталог с маршрутами списка, раздела и товара.
-3. Реализовать модальный checkout одного товара и защищённый AJAX.
+3. Реализовать отдельную страницу checkout одного товара и защищённый AJAX.
 4. Пересчитывать товар, доставку и итог только на сервере, сохранять заказ в инфоблок.
 5. Отправлять менеджеру почтовое уведомление через абстракцию notifier.
 6. Добавить СДЭК и Почту России через общий контракт с fallback до настройки API.

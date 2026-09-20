@@ -16,7 +16,7 @@ $include('benefits.php', 'Преимущества');
 <section class="section catalog" id="katalog">
     <div class="wrap">
         <?php $include('catalog-heading.php', 'Заголовок каталога'); ?>
-        <?php $APPLICATION->IncludeComponent('darkstyle:catalog', '', ['MODE' => 'home', 'LIMIT' => 8, 'CACHE_TIME' => 3600]); ?>
+        <?php $APPLICATION->IncludeComponent('orgbox:catalog', '', ['MODE' => 'home', 'LIMIT' => 8, 'CACHE_TIME' => 3600]); ?>
         <div class="home-catalog-footer"><a class="button" href="/catalog/">Открыть весь каталог →</a></div>
     </div>
 </section>

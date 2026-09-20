@@ -8,7 +8,7 @@ $APPLICATION->SetTitle('Оформление заказа');
 $productId = max(0, (int) ($_GET['product'] ?? 0));
 
 $APPLICATION->IncludeComponent(
-    'darkstyle:checkout',
+    'orgbox:checkout',
     '',
     ['PRODUCT_ID' => $productId, 'CACHE_TIME' => 0]
 );

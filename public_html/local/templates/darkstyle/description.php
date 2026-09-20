@@ -1,6 +1,6 @@
 <?php
 
 $arTemplate = [
-    'NAME' => 'Тёмный стиль',
-    'DESCRIPTION' => 'Основной шаблон лендинга и каталога.',
+    'NAME' => 'orgBox: BaseShop (совместимость)',
+    'DESCRIPTION' => 'Переходный ID старых установок. Используйте шаблон orgbox_baseshop.',
 ];

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/public_html/local/php_interface/lib/DarkStyle/Catalog/CatalogImportService.php';
+require dirname(__DIR__) . '/public_html/local/php_interface/lib/Orgbox/BaseShop/Catalog/CatalogImportService.php';
 
-use DarkStyle\Catalog\CatalogImportService;
+use Orgbox\BaseShop\Catalog\CatalogImportService;
 
 $root = dirname(__DIR__) . '/public_html';
 $content = (string) file_get_contents($root . '/local/js/catalog-data.js');

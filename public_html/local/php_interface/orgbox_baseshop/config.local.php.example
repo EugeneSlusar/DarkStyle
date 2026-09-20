@@ -1,0 +1,13 @@
+<?php
+
+// Copy to config.local.php. The target file is ignored by Git.
+return [
+    'site_name' => 'Название магазина',
+    'theme' => 'dark',
+    'manager_email' => 'orders@example.test',
+    'phone' => '+7 000 000-00-00',
+    'cdek_client_id' => '',
+    'cdek_client_secret' => '',
+    'russian_post_token' => '',
+    'russian_post_key' => '',
+];

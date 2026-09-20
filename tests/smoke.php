@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$root = dirname(__DIR__) . '/public_html/local/php_interface/lib/DarkStyle';
+$root = dirname(__DIR__) . '/public_html/local/php_interface/lib/Orgbox/BaseShop';
 require $root . '/Delivery/DeliveryProviderInterface.php';
 require $root . '/Delivery/DeliveryRequest.php';
 require $root . '/Delivery/DeliveryResult.php';
@@ -11,11 +11,11 @@ require $root . '/Delivery/RussianPostDeliveryProvider.php';
 require $root . '/Delivery/DeliveryManager.php';
 require $root . '/Order/OrderDataValidator.php';
 
-use DarkStyle\Delivery\CdekDeliveryProvider;
-use DarkStyle\Delivery\DeliveryManager;
-use DarkStyle\Delivery\DeliveryRequest;
-use DarkStyle\Delivery\RussianPostDeliveryProvider;
-use DarkStyle\Order\OrderDataValidator;
+use Orgbox\BaseShop\Delivery\CdekDeliveryProvider;
+use Orgbox\BaseShop\Delivery\DeliveryManager;
+use Orgbox\BaseShop\Delivery\DeliveryRequest;
+use Orgbox\BaseShop\Delivery\RussianPostDeliveryProvider;
+use Orgbox\BaseShop\Order\OrderDataValidator;
 
 $request = new DeliveryRequest('Самара', '443000', 700, 80, 15, 15, 1290);
 $manager = new DeliveryManager(new CdekDeliveryProvider(), new RussianPostDeliveryProvider());
