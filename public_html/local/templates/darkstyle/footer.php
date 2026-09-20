@@ -22,5 +22,6 @@ $managerEmail = (string) Config::get('manager_email', '');
     </div>
     <div class="wrap copyright"><span>© <?=date('Y')?> <?=htmlspecialcharsbx($siteName)?>. Все права защищены.</span></div>
 </footer>
+</div>
 </body>
 </html>

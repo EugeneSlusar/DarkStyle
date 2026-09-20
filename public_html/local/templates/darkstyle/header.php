@@ -33,8 +33,9 @@ $siteName = (string) Config::get('site_name', 'Тёмный стиль');
     <?php $APPLICATION->ShowHead(); ?>
     <title><?php $APPLICATION->ShowTitle(); ?> — <?=htmlspecialcharsbx($siteName)?></title>
 </head>
-<body>
+<body class="darkstyle-page">
 <?php $APPLICATION->ShowPanel(); ?>
+<div class="darkstyle-site">
 <header class="header" id="glavnaya">
     <nav class="nav wrap">
         <a class="brand" href="/"><?=htmlspecialcharsbx(mb_strtoupper($siteName))?></a>
