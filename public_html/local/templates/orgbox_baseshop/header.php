@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Bitrix\Main\Page\Asset;
-use Orgbox\BaseShop\Config;
+use OrgBox\BaseShop\Config;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop\Catalog;
+namespace OrgBox\BaseShop\Catalog;
 
 use Bitrix\Main\Loader;
 use RuntimeException;

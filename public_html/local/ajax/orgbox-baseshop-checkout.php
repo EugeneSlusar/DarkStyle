@@ -10,15 +10,15 @@ define('DisableEventsCheck', true);
 require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php';
 
 use Bitrix\Main\Context;
-use Orgbox\BaseShop\Catalog\ProductRepository;
-use Orgbox\BaseShop\Config;
-use Orgbox\BaseShop\Delivery\CdekDeliveryProvider;
-use Orgbox\BaseShop\Delivery\DeliveryManager;
-use Orgbox\BaseShop\Delivery\RussianPostDeliveryProvider;
-use Orgbox\BaseShop\Notification\EmailOrderNotifier;
-use Orgbox\BaseShop\Order\IblockOrderRepository;
-use Orgbox\BaseShop\Order\OrderDataValidator;
-use Orgbox\BaseShop\Order\OrderService;
+use OrgBox\BaseShop\Catalog\ProductRepository;
+use OrgBox\BaseShop\Config;
+use OrgBox\BaseShop\Delivery\CdekDeliveryProvider;
+use OrgBox\BaseShop\Delivery\DeliveryManager;
+use OrgBox\BaseShop\Delivery\RussianPostDeliveryProvider;
+use OrgBox\BaseShop\Notification\EmailOrderNotifier;
+use OrgBox\BaseShop\Order\IblockOrderRepository;
+use OrgBox\BaseShop\Order\OrderDataValidator;
+use OrgBox\BaseShop\Order\OrderService;
 
 header('Content-Type: application/json; charset=UTF-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

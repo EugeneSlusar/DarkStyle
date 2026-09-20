@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop\Delivery;
+namespace OrgBox\BaseShop\Delivery;
 
 interface DeliveryProviderInterface
 {

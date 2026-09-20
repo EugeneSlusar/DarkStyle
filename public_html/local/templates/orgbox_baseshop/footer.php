@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Orgbox\BaseShop\Config;
+use OrgBox\BaseShop\Config;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();

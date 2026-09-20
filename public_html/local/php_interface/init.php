@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Bitrix\Main\Loader;
 
 Loader::registerNamespace(
-    'Orgbox\\BaseShop\\',
-    __DIR__ . '/lib/Orgbox/BaseShop'
+    'OrgBox\\BaseShop\\',
+    __DIR__ . '/lib/OrgBox/BaseShop'
 );
 
 spl_autoload_register(static function (string $legacyClass): void {
@@ -15,7 +15,7 @@ spl_autoload_register(static function (string $legacyClass): void {
         return;
     }
 
-    $currentClass = 'Orgbox\\BaseShop\\' . substr($legacyClass, strlen($legacyPrefix));
+    $currentClass = 'OrgBox\\BaseShop\\' . substr($legacyClass, strlen($legacyPrefix));
     if (class_exists($currentClass) || interface_exists($currentClass) || trait_exists($currentClass)) {
         class_alias($currentClass, $legacyClass);
     }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop\Order;
+namespace OrgBox\BaseShop\Order;
 
-use Orgbox\BaseShop\Catalog\ProductRepository;
-use Orgbox\BaseShop\Delivery\DeliveryManager;
-use Orgbox\BaseShop\Delivery\DeliveryRequest;
-use Orgbox\BaseShop\Notification\OrderNotifierInterface;
+use OrgBox\BaseShop\Catalog\ProductRepository;
+use OrgBox\BaseShop\Delivery\DeliveryManager;
+use OrgBox\BaseShop\Delivery\DeliveryRequest;
+use OrgBox\BaseShop\Notification\OrderNotifierInterface;
 use InvalidArgumentException;
 
 final class OrderService

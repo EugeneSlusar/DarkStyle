@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php';
 
-use Orgbox\BaseShop\Catalog\CatalogImportService;
-use Orgbox\BaseShop\Config;
+use OrgBox\BaseShop\Catalog\CatalogImportService;
+use OrgBox\BaseShop\Config;
 
 global $USER;
 if (!$USER->IsAdmin()) {

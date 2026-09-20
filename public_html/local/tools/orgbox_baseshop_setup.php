@@ -18,6 +18,7 @@ if (!Loader::includeModule('iblock')) {
 
 $messages = [];
 $errors = [];
+$legacyModuleId = 'darkstyle.core';
 $getOption = static function (string $key): string {
     $value = Option::get('orgbox.baseshop', $key, '');
 
@@ -49,6 +50,29 @@ $ensureProperty = static function (int $iblockId, string $code, string $name, st
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
     try {
+        $settingKeys = [
+            'site_name', 'theme', 'manager_email', 'phone', 'origin_city',
+            'cdek_client_id', 'cdek_client_secret', 'russian_post_token',
+            'russian_post_key', 'delivery_fallback_enabled',
+        ];
+        $legacyConfigFile = $_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/darkstyle/config.local.php';
+        $legacyFileSettings = is_file($legacyConfigFile) ? require $legacyConfigFile : [];
+        $legacyFileSettings = is_array($legacyFileSettings) ? $legacyFileSettings : [];
+        foreach ($settingKeys as $key) {
+            if (Option::get('orgbox.baseshop', $key, '') !== '') {
+                continue;
+            }
+            $value = Option::get($legacyModuleId, $key, '');
+            if ($value === '' && array_key_exists($key, $legacyFileSettings)) {
+                $value = is_bool($legacyFileSettings[$key])
+                    ? ($legacyFileSettings[$key] ? 'Y' : 'N')
+                    : (string) $legacyFileSettings[$key];
+            }
+            if ($value !== '') {
+                Option::set('orgbox.baseshop', $key, $value);
+            }
+        }
+
         $typeId = 'orgbox_baseshop';
         if (!\CIBlockType::GetByID($typeId)->Fetch()) {
             $type = new \CIBlockType();
@@ -68,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
 
         $productsId = $findIblock($typeId, 'orgbox_baseshop_products');
         if ($productsId <= 0) {
-            $legacyProductsId = (int) Option::get('darkstyle.core', 'products_iblock_id', '0');
+            $legacyProductsId = (int) Option::get($legacyModuleId, 'products_iblock_id', '0');
             $productsId = $legacyProductsId > 0 && \CIBlock::GetByID($legacyProductsId)->Fetch() ? $legacyProductsId : 0;
         }
         if ($productsId <= 0) {
@@ -90,6 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
                 throw new RuntimeException('Не удалось создать инфоблок товаров.');
             }
         }
+        $productsIblock = new \CIBlock();
+        if (!$productsIblock->Update($productsId, [
+            'IBLOCK_TYPE_ID' => $typeId,
+            'CODE' => 'orgbox_baseshop_products',
+        ])) {
+            throw new RuntimeException('Не удалось обновить идентификаторы инфоблока товаров: ' . $productsIblock->LAST_ERROR);
+        }
 
         $productProperties = [
             ['PRICE', 'Цена', 'N', false], ['ARTICLE', 'Артикул', 'S', false], ['WEIGHT', 'Вес, г', 'N', false],
@@ -102,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
 
         $ordersId = $findIblock($typeId, 'orgbox_baseshop_orders');
         if ($ordersId <= 0) {
-            $legacyOrdersId = (int) Option::get('darkstyle.core', 'orders_iblock_id', '0');
+            $legacyOrdersId = (int) Option::get($legacyModuleId, 'orders_iblock_id', '0');
             $ordersId = $legacyOrdersId > 0 && \CIBlock::GetByID($legacyOrdersId)->Fetch() ? $legacyOrdersId : 0;
         }
         if ($ordersId <= 0) {
@@ -120,6 +151,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             if ($ordersId <= 0) {
                 throw new RuntimeException('Не удалось создать инфоблок заказов.');
             }
+        }
+        $ordersIblock = new \CIBlock();
+        if (!$ordersIblock->Update($ordersId, [
+            'IBLOCK_TYPE_ID' => $typeId,
+            'CODE' => 'orgbox_baseshop_orders',
+        ])) {
+            throw new RuntimeException('Не удалось обновить идентификаторы инфоблока заказов: ' . $ordersIblock->LAST_ERROR);
         }
 
         $orderProperties = [
@@ -169,6 +207,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             }
         }
 
+        if (!empty($_POST['remove_legacy'])) {
+            if (!\CIBlock::GetList([], ['TYPE' => 'darkstyle'])->Fetch() && \CIBlockType::GetByID('darkstyle')->Fetch()) {
+                \CIBlockType::Delete('darkstyle');
+            }
+
+            $by = 'id';
+            $order = 'asc';
+            $legacyMessages = \CEventMessage::GetList($by, $order, ['TYPE_ID' => 'DARKSTYLE_NEW_ORDER']);
+            while ($legacyMessage = $legacyMessages->Fetch()) {
+                \CEventMessage::Delete((int) $legacyMessage['ID']);
+            }
+            \CEventType::Delete('DARKSTYLE_NEW_ORDER');
+            Option::delete($legacyModuleId);
+            if (is_file($legacyConfigFile)) {
+                @unlink($legacyConfigFile);
+            }
+            $messages[] = 'Старые настройки и служебные сущности darkstyle удалены.';
+        }
+
         if (!empty($_POST['demo']) && !\CIBlockSection::GetList([], ['IBLOCK_ID' => $productsId, 'CODE' => 'lada-niva'])->Fetch()) {
             $section = new \CIBlockSection();
             $sectionId = (int) $section->Add(['IBLOCK_ID' => $productsId, 'ACTIVE' => 'Y', 'NAME' => 'Lada Niva', 'CODE' => 'lada-niva']);
@@ -202,12 +259,13 @@ require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_after.p
     <h1>Настройка orgBox: BaseShop</h1>
     <?php foreach ($messages as $message): ?><p style="color:#00dca8"><?=htmlspecialcharsbx($message)?></p><?php endforeach; ?>
     <?php foreach ($errors as $error): ?><p style="color:#ff7474"><?=htmlspecialcharsbx($error)?></p><?php endforeach; ?>
-    <p>Скрипт безопасно запускается повторно: существующие инфоблоки и свойства не дублируются.</p>
+    <p>Скрипт безопасно запускается повторно: существующие инфоблоки и свойства не дублируются. При миграции данные сохраняются, меняются только технические идентификаторы.</p>
     <form method="post" style="display:grid;gap:16px">
         <?php echo bitrix_sessid_post(); ?>
         <label>Email менеджера <input name="manager_email" type="email" required value="<?=htmlspecialcharsbx($getOption('manager_email'))?>" style="display:block;width:100%;padding:10px"></label>
         <label>Телефон сайта <input name="phone" type="text" value="<?=htmlspecialcharsbx($getOption('phone'))?>" style="display:block;width:100%;padding:10px"></label>
         <label><input name="assign_template" type="checkbox" value="1" checked> Назначить шаблон orgbox_baseshop этому сайту</label>
+        <label><input name="remove_legacy" type="checkbox" value="1" checked> Удалить старые настройки и служебные сущности darkstyle после переноса</label>
         <label><input name="demo" type="checkbox" value="1" checked> Создать один демонстрационный товар</label>
         <button type="submit" style="padding:14px;background:#00f2ff;border:0;font-weight:bold">СОЗДАТЬ / ОБНОВИТЬ</button>
     </form>

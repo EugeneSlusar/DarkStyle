@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Orgbox\BaseShop\Catalog\ProductRepository;
-use Orgbox\BaseShop\Config;
+use OrgBox\BaseShop\Catalog\ProductRepository;
+use OrgBox\BaseShop\Config;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-class OrgboxBaseShopCheckoutComponent extends CBitrixComponent
+class OrgBoxBaseShopCheckoutComponent extends CBitrixComponent
 {
     public function executeComponent(): void
     {

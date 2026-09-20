@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop\Notification;
+namespace OrgBox\BaseShop\Notification;
 
 interface OrderNotifierInterface
 {

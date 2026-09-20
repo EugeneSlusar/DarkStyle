@@ -8,7 +8,7 @@ $requiredPaths = [
     '/local/templates/orgbox_baseshop/footer.php',
     '/local/components/orgbox/catalog/class.php',
     '/local/components/orgbox/checkout/class.php',
-    '/local/php_interface/lib/Orgbox/BaseShop/Config.php',
+    '/local/php_interface/lib/OrgBox/BaseShop/Config.php',
     '/local/php_interface/orgbox_baseshop/config.php',
     '/local/ajax/orgbox-baseshop-checkout.php',
     '/local/tools/orgbox_baseshop_setup.php',
@@ -50,8 +50,8 @@ assert(str_contains($templateDescription, 'orgBox: BaseShop'));
 
 $catalogData = (string) file_get_contents($root . '/local/js/catalog-data.js');
 $catalogScript = (string) file_get_contents($root . '/local/js/catalog.js');
-assert(str_starts_with($catalogData, 'window.orgboxBaseShopCatalog='));
-assert(str_contains($catalogScript, 'window.orgboxBaseShopCatalog'));
+assert(str_starts_with($catalogData, 'window.orgBoxBaseShopCatalog='));
+assert(str_contains($catalogScript, 'window.orgBoxBaseShopCatalog'));
 
 $theme = (string) file_get_contents($root . '/local/css/themes/dark.css');
 assert(str_contains($theme, '--theme-primary:'));

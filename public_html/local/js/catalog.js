@@ -1,4 +1,4 @@
-const catalogProducts=window.orgboxBaseShopCatalog||[];
+const catalogProducts=window.orgBoxBaseShopCatalog||[];
 const escapeHtml=value=>String(value||'').replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
 const catalogGrid=document.querySelector('.product-grid');
 

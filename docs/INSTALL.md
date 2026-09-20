@@ -57,7 +57,7 @@ Setup создаёт инфоблоки товаров и заказов, сво
 
 ## Совместимость со старыми установками
 
-Основные идентификаторы решения: шаблон `orgbox_baseshop`, компоненты `orgbox:*`, PHP namespace `Orgbox\BaseShop` и option ID `orgbox.baseshop`. Переходные пути `darkstyle`, компоненты `darkstyle:*`, namespace `DarkStyle` и старые настройки оставлены как адаптеры. Действующий сайт можно обновлять до переключения ID шаблона в административной части.
+Основные идентификаторы решения: шаблон `orgbox_baseshop`, компоненты `orgbox:*`, PHP namespace `OrgBox\BaseShop` и option ID `orgbox.baseshop`. Переходные пути `darkstyle`, компоненты `darkstyle:*`, namespace `DarkStyle` и старые настройки оставлены как адаптеры. Действующий сайт можно обновлять до переключения ID шаблона в административной части.
 
 Для реального API СДЭК потребуются `ORGBOX_BASESHOP_CDEK_CLIENT_ID` и `ORGBOX_BASESHOP_CDEK_CLIENT_SECRET`. Для API Почты России — `ORGBOX_BASESHOP_RUSSIAN_POST_TOKEN` и `ORGBOX_BASESHOP_RUSSIAN_POST_KEY`. До подключения согласованных тарифов оба провайдера возвращают явно помеченный предварительный fallback-расчёт; заказ и выбранная стоимость сохраняются, менеджер подтверждает финальную сумму.
 

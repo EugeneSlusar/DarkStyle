@@ -39,7 +39,7 @@
 - Товары и разделы: штатный инфоблок Bitrix.
 - Заказы: отдельный инфоблок, без модулей `sale` и `catalog`.
 - Представление: шаблон `local/templates/orgbox_baseshop` и компоненты `orgbox:catalog`, `orgbox:checkout`.
-- Бизнес-логика: PHP-классы `Orgbox\BaseShop\Catalog`, `Orgbox\BaseShop\Order`, `Orgbox\BaseShop\Delivery`, `Orgbox\BaseShop\Notification`.
+- Бизнес-логика: PHP-классы `OrgBox\BaseShop\Catalog`, `OrgBox\BaseShop\Order`, `OrgBox\BaseShop\Delivery`, `OrgBox\BaseShop\Notification`.
 - Интеграции: провайдеры доставки за единым контрактом; до выдачи credentials работают прозрачные fallback-тарифы.
 - Настройки: Bitrix options, переменные окружения либо игнорируемый `config.local.php`.
 - Инициализация: одноразовый admin-only скрипт создаёт тип инфоблоков, инфоблоки и свойства.

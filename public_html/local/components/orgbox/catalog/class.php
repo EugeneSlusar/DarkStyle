@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use Bitrix\Main\Context;
-use Orgbox\BaseShop\Catalog\ProductRepository;
-use Orgbox\BaseShop\Config;
+use OrgBox\BaseShop\Catalog\ProductRepository;
+use OrgBox\BaseShop\Config;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-class OrgboxBaseShopCatalogComponent extends CBitrixComponent
+class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
 {
     public function executeComponent(): void
     {

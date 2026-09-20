@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop;
+namespace OrgBox\BaseShop;
 
 use Bitrix\Main\Config\Option;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Orgbox\BaseShop\Order;
+namespace OrgBox\BaseShop\Order;
 
 use InvalidArgumentException;
 
