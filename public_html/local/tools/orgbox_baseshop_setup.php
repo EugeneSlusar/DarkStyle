@@ -200,9 +200,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
         }
 
         if (!empty($_POST['assign_template'])) {
-            if (is_callable(['CSite', 'SetTemplate'])) {
-                \CSite::SetTemplate(SITE_ID, [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']]);
-            } else {
+            $site = new \CSite();
+            if (!$site->Update(SITE_ID, [
+                'TEMPLATE' => [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']],
+            ])) {
                 $messages[] = 'Назначьте шаблон orgbox_baseshop сайту вручную в административной части.';
             }
         }

@@ -12,8 +12,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 $moduleId = 'orgbox.baseshop';
 $legacyModuleId = 'darkstyle.core';
 $siteId = defined('SITE_ID') ? SITE_ID : (string) \CSite::GetDefSite();
-if ($siteId !== '' && is_callable(['CSite', 'SetTemplate'])) {
-    \CSite::SetTemplate($siteId, [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']]);
+if ($siteId !== '') {
+    $site = new \CSite();
+    $site->Update($siteId, [
+        'TEMPLATE' => [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']],
+    ]);
 }
 
 if (Option::get($moduleId, 'migration_completed', '') === 'Y' || !Loader::includeModule('iblock')) {
