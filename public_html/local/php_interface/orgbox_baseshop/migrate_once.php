@@ -11,6 +11,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 
 $moduleId = 'orgbox.baseshop';
 $legacyModuleId = 'darkstyle.core';
+$siteId = defined('SITE_ID') ? SITE_ID : (string) \CSite::GetDefSite();
+if ($siteId !== '' && is_callable(['CSite', 'SetTemplate'])) {
+    \CSite::SetTemplate($siteId, [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']]);
+}
+
 if (Option::get($moduleId, 'migration_completed', '') === 'Y' || !Loader::includeModule('iblock')) {
     return;
 }
@@ -116,10 +121,6 @@ if (!\CEventMessage::GetList($by = 'id', $order = 'desc', ['TYPE_ID' => 'ORGBOX_
         'BODY_TYPE' => 'text',
         'MESSAGE' => "Заказ №#ORDER_ID#\n\nТовар: #PRODUCT_NAME#\nКоличество: #QUANTITY#\nИтого: #TOTAL# руб.\n\nПолучатель: #CUSTOMER_NAME#\nТелефон: #PHONE#\nEmail: #EMAIL#\nАдрес: #POSTAL_CODE#, #CITY#, #ADDRESS#\nДоставка: #DELIVERY_SERVICE# (#DELIVERY_PRICE# руб.)\n\nКомментарий: #COMMENT#",
     ]);
-}
-
-if (defined('SITE_ID') && is_callable(['CSite', 'SetTemplate'])) {
-    \CSite::SetTemplate(SITE_ID, [['CONDITION' => '', 'SORT' => 1, 'TEMPLATE' => 'orgbox_baseshop']]);
 }
 
 Option::set($moduleId, 'migration_completed', 'Y');
