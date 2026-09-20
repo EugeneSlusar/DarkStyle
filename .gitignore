@@ -8,4 +8,3 @@
 
 # Per-installation Bitrix settings and credentials.
 public_html/local/php_interface/orgbox_baseshop/config.local.php
-public_html/local/php_interface/darkstyle/config.local.php

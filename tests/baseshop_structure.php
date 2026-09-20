@@ -31,7 +31,18 @@ $legacyAdapters = [
 ];
 
 foreach ($legacyAdapters as $path) {
-    assert(is_file($root . $path), 'Missing compatibility adapter: ' . $path);
+    assert(!file_exists($root . $path), 'Legacy adapter still exists: ' . $path);
+}
+
+$runtimeFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/local'));
+foreach ($runtimeFiles as $file) {
+    if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'js', 'css'], true)) {
+        continue;
+    }
+    $content = (string) file_get_contents($file->getPathname());
+    assert(stripos($content, 'darkstyle') === false, 'Legacy identifier found in ' . $file->getPathname());
+    assert(!str_contains($content, 'Orgbox'), 'Incorrect PHP brand casing in ' . $file->getPathname());
+    assert(!str_contains($content, 'orgboxBaseShop'), 'Incorrect JavaScript brand casing in ' . $file->getPathname());
 }
 
 $entryPoints = [

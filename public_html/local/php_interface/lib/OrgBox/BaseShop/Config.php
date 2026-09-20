@@ -9,24 +9,17 @@ use Bitrix\Main\Config\Option;
 final class Config
 {
     private const MODULE_ID = 'orgbox.baseshop';
-    private const LEGACY_MODULE_ID = 'darkstyle.core';
 
     private static ?array $values = null;
 
     public static function get(string $key, mixed $default = null): mixed
     {
         $environmentValue = getenv('ORGBOX_BASESHOP_' . strtoupper($key));
-        if ($environmentValue === false || $environmentValue === '') {
-            $environmentValue = getenv('DARKSTYLE_' . strtoupper($key));
-        }
         if ($environmentValue !== false && $environmentValue !== '') {
             return self::cast($environmentValue, $default);
         }
 
         $option = Option::get(self::MODULE_ID, $key, '');
-        if ($option === '') {
-            $option = Option::get(self::LEGACY_MODULE_ID, $key, '');
-        }
         if ($option !== '') {
             return self::cast($option, $default);
         }

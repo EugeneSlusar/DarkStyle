@@ -17,13 +17,10 @@ $defaults = [
     'delivery_fallback_enabled' => true,
 ];
 
-$legacyFile = dirname(__DIR__) . '/darkstyle/config.local.php';
-$legacy = is_file($legacyFile) ? require $legacyFile : [];
 $localFile = __DIR__ . '/config.local.php';
 $local = is_file($localFile) ? require $localFile : [];
 
 return array_replace(
     $defaults,
-    is_array($legacy) ? $legacy : [],
     is_array($local) ? $local : []
 );
