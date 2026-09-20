@@ -17,7 +17,9 @@ final class DarkStyleCatalogComponent extends CBitrixComponent
         global $APPLICATION;
 
         try {
-            $repository = new ProductRepository((int) ($this->arParams['IBLOCK_ID'] ?: Config::get('products_iblock_id', 0)));
+            $iblockId = (int) ($this->arParams['IBLOCK_ID'] ?: Config::get('products_iblock_id', 0));
+            $repository = new ProductRepository($iblockId);
+            $this->addProductsAdminButton($iblockId);
             $mode = (string) ($this->arParams['MODE'] ?? 'catalog');
 
             if ($mode === 'home') {
@@ -72,6 +74,33 @@ final class DarkStyleCatalogComponent extends CBitrixComponent
             $this->arResult = ['ERROR' => $exception->getMessage()];
             $this->includeComponentTemplate('error');
         }
+    }
+
+    private function addProductsAdminButton(int $iblockId): void
+    {
+        global $USER;
+
+        if (!is_object($USER) || !$USER->IsAdmin()) {
+            return;
+        }
+
+        $iblockType = (string) \CIBlock::GetArrayByID($iblockId, 'IBLOCK_TYPE_ID');
+        if ($iblockType === '') {
+            return;
+        }
+
+        $adminUrl = '/bitrix/admin/iblock_element_admin.php?' . http_build_query([
+            'IBLOCK_ID' => $iblockId,
+            'type' => $iblockType,
+            'lang' => defined('LANGUAGE_ID') ? LANGUAGE_ID : 'ru',
+            'find_section_section' => 0,
+        ], '', '&', PHP_QUERY_RFC3986);
+
+        $this->AddIncludeAreaIcon([
+            'URL' => "javascript:window.open('" . \CUtil::JSEscape($adminUrl) . "', '_blank', 'noopener');void(0);",
+            'ICON' => 'bx-context-toolbar-edit-icon',
+            'TITLE' => 'Редактировать товары',
+        ]);
     }
 
     private function notFound(): void
