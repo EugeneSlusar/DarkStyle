@@ -5,6 +5,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__) . '/public_html';
 $requiredPaths = [
     '/local/templates/orgbox_baseshop/header.php',
+    '/include/orgbox_baseshop/logo/before.php',
     '/include/orgbox_baseshop/logo/icon.php',
     '/include/orgbox_baseshop/logo/text.php',
     '/include/orgbox_baseshop/home/hero.php',
@@ -70,6 +71,8 @@ $templateDescription = (string) file_get_contents($root . '/local/templates/orgb
 assert(str_contains($templateDescription, 'orgBox: BaseShop'));
 
 $templateHeader = (string) file_get_contents($root . '/local/templates/orgbox_baseshop/header.php');
+assert(str_contains($templateHeader, "'include/orgbox_baseshop/logo/before.php'"));
+assert(str_contains($templateHeader, "'NAME' => 'Текст перед логотипом'"));
 assert(str_contains($templateHeader, "'include/orgbox_baseshop/logo/icon.php'"));
 assert(str_contains($templateHeader, "'NAME' => 'Знак логотипа'"));
 assert(str_contains($templateHeader, "'include/orgbox_baseshop/logo/text.php'"));

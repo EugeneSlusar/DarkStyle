@@ -46,6 +46,17 @@ $siteName = (string) Config::get('site_name', 'Мой магазин');
 <header class="header" id="glavnaya">
     <nav class="nav wrap">
         <a class="brand" href="/" aria-label="<?=htmlspecialcharsbx($siteName)?>">
+            <span class="brand-before"><?php
+                $APPLICATION->IncludeFile(
+                    SITE_DIR . 'include/orgbox_baseshop/logo/before.php',
+                    [],
+                    [
+                        'MODE' => 'html',
+                        'NAME' => 'Текст перед логотипом',
+                        'SHOW_BORDER' => true,
+                    ]
+                );
+            ?></span>
             <span class="brand-icon" aria-hidden="true"><?php
                 $APPLICATION->IncludeFile(
                     SITE_DIR . 'include/orgbox_baseshop/logo/icon.php',
