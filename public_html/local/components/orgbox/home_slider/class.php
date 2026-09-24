@@ -28,6 +28,7 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             'ADD_LINK' => $iblockId > 0 ? $this->elementEditUrl($iblockId, $iblockType) : '',
             'AUTOPLAY_DELAY' => max(0, (int) ($this->arParams['AUTOPLAY_DELAY'] ?? 7000)),
         ];
+        $this->addBannerAdminMenu((string) $this->arResult['ADD_LINK']);
         $this->includeComponentTemplate();
     }
 
@@ -108,6 +109,59 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             'EDIT_LINK' => '',
             'DELETE_LINK' => '',
         ]];
+    }
+
+    private function addBannerAdminMenu(string $addLink): void
+    {
+        global $APPLICATION, $USER;
+
+        if (
+            $addLink === ''
+            || !is_object($USER)
+            || !$USER->IsAdmin()
+            || !$APPLICATION->GetShowIncludeAreas()
+        ) {
+            return;
+        }
+
+        $this->AddIncludeAreaIcons([
+            [
+                'ID' => 'orgbox-baseshop-banner-add',
+                'TITLE' => 'Добавить баннер',
+                'URL' => "javascript:window.open('" . CUtil::JSEscape($addLink) . "', '_blank', 'noopener');void(0);",
+                'ICON' => 'menu-add',
+                'IN_PARAMS_MENU' => true,
+            ],
+            [
+                'ID' => 'orgbox-baseshop-banner-edit',
+                'TITLE' => 'Изменить активный баннер',
+                'URL' => $this->activeBannerScript('edit'),
+                'ICON' => 'menu-edit',
+                'IN_PARAMS_MENU' => true,
+            ],
+            [
+                'ID' => 'orgbox-baseshop-banner-delete',
+                'TITLE' => 'Удалить активный баннер',
+                'URL' => $this->activeBannerScript('delete'),
+                'ICON' => 'menu-delete',
+                'IN_PARAMS_MENU' => true,
+            ],
+        ]);
+    }
+
+    private function activeBannerScript(string $action): string
+    {
+        $attribute = $action === 'delete' ? 'data-banner-delete-url' : 'data-banner-edit-url';
+        $confirmation = $action === 'delete'
+            ? "if(!window.confirm('Удалить активный баннер?'))return;"
+            : '';
+        $navigation = $action === 'delete'
+            ? 'window.location.href=url;'
+            : "window.open(url, '_blank', 'noopener');";
+
+        return "javascript:(function(){var slide=document.querySelector('[data-home-slider-slide].is-active');"
+            . "var url=slide?slide.getAttribute('" . $attribute . "'):'';if(!url)return;"
+            . $confirmation . $navigation . '})();void(0);';
     }
 
     private function elementEditUrl(int $iblockId, string $iblockType, int $elementId = 0): string
