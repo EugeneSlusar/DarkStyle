@@ -110,6 +110,8 @@ $sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/
 assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
 assert(str_contains($sliderComponent, 'getFallbackItems'));
 assert(str_contains($sliderComponent, 'applyDemoImages'));
+assert(str_contains($sliderComponent, 'array_slice($items, 0, 3)'));
+assert(str_contains($sliderComponent, 'foreach ($demoImages as $index => $image)'));
 assert(str_contains($sliderComponent, '/local/assets/site/process-application-v2.jpg'));
 assert(!str_contains($sliderComponent, "'IN_PARAMS_MENU' => true"));
 assert(str_contains($sliderComponent, "'ID' => 'orgbox-baseshop-banner-add'"));

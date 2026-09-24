@@ -74,11 +74,11 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
 
     private function applyDemoImages(array &$items): void
     {
-        if (count($items) !== 3) {
+        if (count($items) < 3) {
             return;
         }
 
-        $images = array_values(array_unique(array_column($items, 'IMAGE')));
+        $images = array_values(array_unique(array_column(array_slice($items, 0, 3), 'IMAGE')));
         if (count($images) !== 1) {
             return;
         }
@@ -88,10 +88,9 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             '/local/assets/site/process-application-v2.jpg',
             '/local/assets/site/window-tint-night-woman-wide.png',
         ];
-        foreach ($items as $index => &$item) {
-            $item['IMAGE'] = $demoImages[$index];
+        foreach ($demoImages as $index => $image) {
+            $items[$index]['IMAGE'] = $image;
         }
-        unset($item);
     }
 
     private function getFallbackItems(): array
