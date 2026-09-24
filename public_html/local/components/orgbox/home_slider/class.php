@@ -65,7 +65,31 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             ];
         }
 
+        $this->applyDemoImages($items);
+
         return $items;
+    }
+
+    private function applyDemoImages(array &$items): void
+    {
+        if (count($items) !== 3) {
+            return;
+        }
+
+        $images = array_values(array_unique(array_column($items, 'IMAGE')));
+        if (count($images) !== 1) {
+            return;
+        }
+
+        $demoImages = [
+            'https://cdn-ru.bitrix24.ru/b21728636/ai/6cc/6cc0a82d4221ab6c976fc2fc3d588dbe/RP9k8c2e6BeSuz0oM9Nw5HwDTnQVZQk4.jpg',
+            '/local/assets/site/process-installation.jpg',
+            '/local/assets/site/process-installation.jpg',
+        ];
+        foreach ($items as $index => &$item) {
+            $item['IMAGE'] = $demoImages[$index];
+        }
+        unset($item);
     }
 
     private function getFallbackItems(): array

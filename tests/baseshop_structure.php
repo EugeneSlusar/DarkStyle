@@ -89,6 +89,7 @@ $sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/
 assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
 assert(str_contains($sliderComponent, "'Добавить баннер'"));
 assert(str_contains($sliderComponent, 'getFallbackItems'));
+assert(str_contains($sliderComponent, 'applyDemoImages'));
 
 $sliderTemplate = (string) file_get_contents($root . '/local/components/orgbox/home_slider/templates/.default/template.php');
 assert(str_contains($sliderTemplate, "CIBlock::GetArrayByID"));
