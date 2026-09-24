@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let timer=0;
     let moving=false;
     const delay=Math.max(0,Number(slider.dataset.autoplayDelay)||0);
+    if(delay)slider.style.setProperty('--home-slider-progress-duration',`${delay}ms`);
     const updateState=()=>{
       slides.forEach((slide,itemIndex)=>{
         const active=itemIndex===current;
