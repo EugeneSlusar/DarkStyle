@@ -25,8 +25,10 @@ if (!$targetType) {
 $types = [];
 $typeList = \CIBlockType::GetList([], []);
 while ($type = $typeList->Fetch()) {
-    if ($type['ID'] !== $targetTypeId && mb_strtolower(trim((string) $type['NAME'])) === mb_strtolower('Темный стиль')) {
-        $types[] = $type;
+    $typeId = (string) $type['ID'];
+    $localizedType = \CIBlockType::GetByIDLang($typeId, LANGUAGE_ID);
+    if ($typeId !== $targetTypeId && mb_strtolower(trim((string) ($localizedType['NAME'] ?? ''))) === mb_strtolower('Темный стиль')) {
+        $types[] = array_merge($type, (array) $localizedType);
     }
 }
 if (count($types) !== 1) {
@@ -86,6 +88,36 @@ foreach ($targetBlocks as $block) {
     $targetByCode[(string) $block['CODE']] = $block;
 }
 
+if ($legacyBlocks === []) {
+    $products = $targetByCode['orgbox_baseshop_products'] ?? null;
+    $orders = $targetByCode['orgbox_baseshop_orders'] ?? null;
+    $banners = $targetByCode['orgbox_baseshop_home_banners'] ?? null;
+    if (!$products || !$orders || !$banners) {
+        die('Перенос выполнен не полностью. Старый тип оставлен без изменений.');
+    }
+
+    $confirmRecovery = $_SERVER['REQUEST_METHOD'] === 'POST'
+        && check_bitrix_sessid()
+        && ($_POST['confirm'] ?? '') === 'RECOVER';
+    if ($confirmRecovery) {
+        $legacyTypeManager = new \CIBlockType();
+        if (!$legacyTypeManager->Delete((string) $legacyType['ID'])) {
+            die('Не удалось удалить пустой старый тип инфоблоков.');
+        }
+        Option::set('orgbox.baseshop', 'products_iblock_id', (string) $products['ID']);
+        Option::set('orgbox.baseshop', 'orders_iblock_id', (string) $orders['ID']);
+        Option::set('orgbox.baseshop', 'banners_iblock_id', (string) $banners['ID']);
+        echo 'Объединение завершено. Старый пустой тип удалён.';
+        exit;
+    }
+
+    ?><!doctype html><meta charset="utf-8"><title>Завершение объединения</title>
+    <h1>Завершение объединения</h1>
+    <p>Инфоблоки уже перенесены в orgBox: BaseShop. Осталось удалить пустой старый тип.</p>
+    <form method="post"><input type="hidden" name="sessid" value="<?=htmlspecialcharsbx(bitrix_sessid())?>"><input type="hidden" name="confirm" value="RECOVER"><button type="submit">Удалить пустой старый тип</button></form><?php
+    exit;
+}
+
 $sources = [];
 $targetsToDelete = [];
 foreach ([['Товары', 'orgbox_baseshop_products'], ['Заказы', 'orgbox_baseshop_orders']] as [$name, $code]) {
@@ -115,10 +147,8 @@ if ($confirm) {
             throw new RuntimeException('Не удалось удалить пустой дубликат «' . $target['NAME'] . '».');
         }
     }
-    if (!\CIBlockType::Update((string) $legacyType['ID'], ['NAME' => 'Архивный тип'])) {
-        throw new RuntimeException('Не удалось переименовать старый тип перед удалением.');
-    }
-    if (!\CIBlockType::Delete((string) $legacyType['ID'])) {
+    $legacyTypeManager = new \CIBlockType();
+    if (!$legacyTypeManager->Delete((string) $legacyType['ID'])) {
         throw new RuntimeException('Не удалось удалить пустой старый тип.');
     }
     Option::set('orgbox.baseshop', 'products_iblock_id', (string) $sources[0][0]['ID']);
