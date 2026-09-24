@@ -130,21 +130,18 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
                 'TITLE' => 'Добавить баннер',
                 'URL' => "javascript:window.open('" . CUtil::JSEscape($addLink) . "', '_blank', 'noopener');void(0);",
                 'ICON' => 'menu-add',
-                'IN_PARAMS_MENU' => true,
             ],
             [
                 'ID' => 'orgbox-baseshop-banner-edit',
                 'TITLE' => 'Изменить активный баннер',
                 'URL' => $this->activeBannerScript('edit'),
                 'ICON' => 'menu-edit',
-                'IN_PARAMS_MENU' => true,
             ],
             [
                 'ID' => 'orgbox-baseshop-banner-delete',
                 'TITLE' => 'Удалить активный баннер',
                 'URL' => $this->activeBannerScript('delete'),
                 'ICON' => 'menu-delete',
-                'IN_PARAMS_MENU' => true,
             ],
         ]);
     }

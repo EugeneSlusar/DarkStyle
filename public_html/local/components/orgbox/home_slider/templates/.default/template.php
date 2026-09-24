@@ -11,11 +11,6 @@ if ($items === []) {
     return;
 }
 
-global $APPLICATION, $USER;
-$showBannerActions = is_object($USER)
-    && $USER->IsAdmin()
-    && $APPLICATION->GetShowIncludeAreas()
-    && ($arResult['ADD_LINK'] ?? '') !== '';
 ?>
 <section class="home-slider" data-home-slider data-autoplay-delay="<?=intval($arResult['AUTOPLAY_DELAY'] ?? 7000)?>">
     <div class="home-slider-track" data-home-slider-track>
@@ -41,13 +36,6 @@ $showBannerActions = is_object($USER)
         </article>
     <?php endforeach; ?>
     </div>
-    <?php if ($showBannerActions): ?>
-        <div class="home-slider-edit-actions" aria-label="Управление баннерами">
-            <a href="<?=htmlspecialcharsbx($arResult['ADD_LINK'])?>" target="_blank" rel="noopener">Добавить баннер</a>
-            <button type="button" data-home-slider-edit>Изменить баннер</button>
-            <button class="is-danger" type="button" data-home-slider-delete>Удалить баннер</button>
-        </div>
-    <?php endif; ?>
     <?php if (count($items) > 1): ?>
         <div class="home-slider-controls wrap">
             <button class="home-slider-arrow home-slider-prev" type="button" data-home-slider-prev aria-label="Предыдущий баннер">←</button>
