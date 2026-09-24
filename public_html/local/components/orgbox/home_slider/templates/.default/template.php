@@ -10,13 +10,23 @@ $items = $arResult['ITEMS'] ?? [];
 if ($items === []) {
     return;
 }
+$editAction = CIBlock::GetArrayByID((int) ($arResult['IBLOCK_ID'] ?? 0), 'ELEMENT_EDIT');
+$deleteAction = CIBlock::GetArrayByID((int) ($arResult['IBLOCK_ID'] ?? 0), 'ELEMENT_DELETE');
+if (!is_array($editAction)) {
+    $editAction = ['ICON' => 'bx-context-toolbar-edit-icon'];
+}
+if (!is_array($deleteAction)) {
+    $deleteAction = ['ICON' => 'bx-context-toolbar-delete-icon'];
+}
+$editAction['TITLE'] = 'Изменить баннер';
+$deleteAction['TITLE'] = 'Удалить баннер';
 ?>
 <section class="home-slider" data-home-slider data-autoplay-delay="<?=intval($arResult['AUTOPLAY_DELAY'] ?? 7000)?>">
     <?php foreach ($items as $index => $item): ?>
         <?php if ((int) $item['ID'] > 0): ?>
             <?php
-            $this->AddEditAction($item['ID'], $item['EDIT_LINK'], ['TITLE' => 'Изменить баннер']);
-            $this->AddDeleteAction($item['ID'], $item['DELETE_LINK'], ['CONFIRM' => 'Удалить баннер?']);
+            $this->AddEditAction($item['ID'], $item['EDIT_LINK'], $editAction);
+            $this->AddDeleteAction($item['ID'], $item['DELETE_LINK'], $deleteAction, ['CONFIRM' => 'Удалить баннер?']);
             ?>
         <?php endif; ?>
         <article class="hero home-slider-slide<?=$index === 0 ? ' is-active' : ''?>" id="<?=$this->GetEditAreaId($item['ID'])?>" data-home-slider-slide aria-hidden="<?=$index === 0 ? 'false' : 'true'?>">

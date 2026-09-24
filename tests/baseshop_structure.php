@@ -90,6 +90,11 @@ assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
 assert(str_contains($sliderComponent, "'Добавить баннер'"));
 assert(str_contains($sliderComponent, 'getFallbackItems'));
 
+$sliderTemplate = (string) file_get_contents($root . '/local/components/orgbox/home_slider/templates/.default/template.php');
+assert(str_contains($sliderTemplate, "CIBlock::GetArrayByID"));
+assert(str_contains($sliderTemplate, "'Изменить баннер'"));
+assert(str_contains($sliderTemplate, "'Удалить баннер'"));
+
 $setup = (string) file_get_contents($root . '/local/tools/orgbox_baseshop_setup.php');
 assert(str_contains($setup, "'orgbox_baseshop_home_banners'"));
 assert(str_contains($setup, "'Баннеры на главной'"));
