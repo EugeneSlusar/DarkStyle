@@ -30,7 +30,33 @@ while ($type = $typeList->Fetch()) {
     }
 }
 if (count($types) !== 1) {
-    die('Не найден единственный тип «Темный стиль». Найдено: ' . count($types));
+    $candidates = [];
+    $iblocks = \CIBlock::GetList(['ID' => 'ASC'], ['ACTIVE' => 'Y']);
+    while ($iblock = $iblocks->Fetch()) {
+        $typeId = (string) $iblock['IBLOCK_TYPE_ID'];
+        if ($typeId === $targetTypeId) {
+            continue;
+        }
+        $hasProductFields = \CIBlockProperty::GetList([], ['IBLOCK_ID' => (int) $iblock['ID'], 'CODE' => 'PRICE'])->Fetch()
+            && \CIBlockProperty::GetList([], ['IBLOCK_ID' => (int) $iblock['ID'], 'CODE' => 'ARTICLE'])->Fetch();
+        $hasOrderFields = \CIBlockProperty::GetList([], ['IBLOCK_ID' => (int) $iblock['ID'], 'CODE' => 'PRODUCT_ID'])->Fetch()
+            && \CIBlockProperty::GetList([], ['IBLOCK_ID' => (int) $iblock['ID'], 'CODE' => 'TOTAL'])->Fetch();
+        if ($hasProductFields || $hasOrderFields) {
+            $candidates[$typeId] = true;
+        }
+        $name = mb_strtolower(trim((string) $iblock['NAME']));
+        if (in_array($name, ['товары', 'заказы'], true)) {
+            $candidates[$typeId] = true;
+        }
+    }
+    if (count($candidates) === 1) {
+        $legacyTypeId = (string) array_key_first($candidates);
+        $legacyType = \CIBlockType::GetByID($legacyTypeId)->Fetch();
+        $types = $legacyType ? [$legacyType] : [];
+    }
+}
+if (count($types) !== 1) {
+    die('Не найден единственный старый тип инфоблоков. Найдено: ' . count($types));
 }
 $legacyType = $types[0];
 
