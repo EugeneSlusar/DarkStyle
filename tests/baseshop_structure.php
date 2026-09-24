@@ -99,6 +99,8 @@ assert(str_contains($sliderComponent, "'ID' => 'orgbox-baseshop-banner-delete'")
 $sliderTemplate = (string) file_get_contents($root . '/local/components/orgbox/home_slider/templates/.default/template.php');
 assert(str_contains($sliderTemplate, 'data-banner-edit-url'));
 assert(str_contains($sliderTemplate, 'data-banner-delete-url'));
+assert(str_contains($sliderTemplate, 'class="home-slider-controls"'));
+assert(!str_contains($sliderTemplate, 'home-slider-controls wrap'));
 
 $sliderScript = (string) file_get_contents($root . '/local/components/orgbox/home_slider/templates/.default/script.js');
 assert(str_contains($sliderScript, "slide.classList.toggle('is-active',active)"));

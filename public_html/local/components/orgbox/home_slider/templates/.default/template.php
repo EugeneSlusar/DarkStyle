@@ -37,7 +37,7 @@ if ($items === []) {
     <?php endforeach; ?>
     </div>
     <?php if (count($items) > 1): ?>
-        <div class="home-slider-controls wrap">
+        <div class="home-slider-controls">
             <button class="home-slider-arrow home-slider-prev" type="button" data-home-slider-prev aria-label="Предыдущий баннер">←</button>
             <div class="home-slider-dots" role="tablist" aria-label="Баннеры главной страницы">
                 <?php foreach ($items as $index => $item): ?><button class="<?=$index === 0 ? 'is-active' : ''?>" type="button" data-home-slider-dot="<?=$index?>" aria-label="Баннер <?=($index + 1)?>" aria-selected="<?=$index === 0 ? 'true' : 'false'?>"></button><?php endforeach; ?>
