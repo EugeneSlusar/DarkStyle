@@ -49,11 +49,14 @@
     text-shadow: 0 5px 35px #000;
 }
 
-.orgbox-baseshop .catalog-section-hero .catalog-tags {
-    margin: 0;
-    border-color: #ffffff24;
-    background: #0b0b0bd9;
-    backdrop-filter: blur(8px);
+.orgbox-baseshop .catalog-back-link {
+    display: inline-block;
+    transition: color .2s, text-shadow .2s;
+}
+
+.orgbox-baseshop .catalog-back-link:hover {
+    color: #fff;
+    text-shadow: 0 0 15px var(--theme-primary);
 }
 
 .orgbox-baseshop .catalog-section-products {

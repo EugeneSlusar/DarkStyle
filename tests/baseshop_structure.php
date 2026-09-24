@@ -100,6 +100,8 @@ assert(str_contains($catalogHome, "require __DIR__ . '/_sections.php'"));
 $catalogList = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/list.php');
 assert(str_contains($catalogList, "['SECTION']['PICTURE']"));
 assert(str_contains($catalogList, '--catalog-section-background'));
+assert(str_contains($catalogList, 'class="number catalog-back-link" href="/catalog/"'));
+assert(!str_contains($catalogList, 'catalog-tags'));
 $productRepository = (string) file_get_contents($root . '/local/php_interface/lib/OrgBox/BaseShop/Catalog/ProductRepository.php');
 assert(str_contains($productRepository, 'getSectionStats'));
 assert(str_contains($productRepository, "'COUNT' =>"));

@@ -6,13 +6,7 @@ $sectionPicture = (string) ($arResult['SECTION']['PICTURE'] ?? '');
     <div class="wrap">
         <div class="catalog-section-hero"<?=$sectionPicture !== '' ? ' style="--catalog-section-background:url(\'' . htmlspecialcharsbx($sectionPicture) . '\')"' : ''?>>
             <div class="catalog-section-hero-content">
-                <div class="section-head"><div><span class="number">КАТАЛОГ</span><h1><?=htmlspecialcharsbx($arResult['SECTION']['NAME'] ?? 'Каталог')?></h1></div></div>
-                <?php if ($arResult['SECTIONS']): ?>
-                    <nav class="catalog-tags" aria-label="Разделы каталога">
-                        <span class="catalog-tags-label">Выберите автомобиль</span>
-                        <div class="catalog-tags-list"><a href="/catalog/">Все</a><?php foreach ($arResult['SECTIONS'] as $section): ?><a href="<?=htmlspecialcharsbx($section['URL'])?>"><?=htmlspecialcharsbx($section['NAME'])?></a><?php endforeach; ?></div>
-                    </nav>
-                <?php endif; ?>
+                <div class="section-head"><div><a class="number catalog-back-link" href="/catalog/">КАТАЛОГ</a><h1><?=htmlspecialcharsbx($arResult['SECTION']['NAME'] ?? 'Каталог')?></h1></div></div>
             </div>
         </div>
         <div class="catalog-section-products">

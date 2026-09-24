@@ -21,11 +21,6 @@
 .orgbox-baseshop .gallery-dot.active{width:12px;border-radius:4px;background:#1677ff}
 .orgbox-baseshop .gallery-dot:hover{background:var(--theme-primary)}
 .orgbox-baseshop .product-card>.product-info{position:relative;inset:auto;padding:20px;min-height:225px}
-.orgbox-baseshop .catalog-tags{margin:-25px 0 55px;padding:26px 28px;border:1px solid #292929;background:linear-gradient(135deg,#111,#0b0b0b);box-shadow:inset 3px 0 var(--theme-primary)}
-.orgbox-baseshop .catalog-tags-label{display:block;margin-bottom:16px;color:#777;font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
-.orgbox-baseshop .catalog-tags-list{display:flex;flex-wrap:wrap;gap:10px}
-.orgbox-baseshop .catalog-tags-list a{padding:10px 15px;border:1px solid #303030;background:#171717;color:#b5b5b5;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:color .2s,border-color .2s,box-shadow .2s,transform .2s}
-.orgbox-baseshop .catalog-tags-list a:hover{color:#fff;border-color:var(--theme-primary);box-shadow:0 0 14px color-mix(in srgb,var(--theme-primary) 14%,transparent);transform:translateY(-2px)}
 .orgbox-baseshop .catalog-group-title{grid-column:1/-1;display:flex;align-items:center;gap:20px;margin:45px 0 5px;padding:25px 0 20px;border-top:1px solid #292929;border-bottom:1px solid #292929;scroll-margin-top:85px}
 .orgbox-baseshop .catalog-group-title:first-child{margin-top:0}
 .orgbox-baseshop .catalog-group-title>span{color:var(--theme-primary);font-size:10px;font-weight:900;letter-spacing:.2em}
@@ -39,4 +34,4 @@
 @media(max-width:1000px){.orgbox-baseshop .product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.orgbox-baseshop .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.orgbox-baseshop .product-card{height:auto}.orgbox-baseshop .product-card a{position:absolute;margin:0}.orgbox-baseshop .product-card>div:last-child{min-height:230px}}
 @media(max-width:440px){.orgbox-baseshop .product-grid{grid-template-columns:1fr}.orgbox-baseshop .product-card h3{min-height:auto}.orgbox-baseshop .product-card>div:last-child{min-height:205px}}
-@media(max-width:560px){.orgbox-baseshop .catalog-tags{margin-top:-10px;padding:20px}.orgbox-baseshop .catalog-tags-list{gap:7px}.orgbox-baseshop .catalog-tags-list a{padding:8px 10px;font-size:9px}.orgbox-baseshop .catalog-group-title{gap:12px;margin-top:32px}.orgbox-baseshop .catalog-group-title small{display:none}}
+@media(max-width:560px){.orgbox-baseshop .catalog-group-title{gap:12px;margin-top:32px}.orgbox-baseshop .catalog-group-title small{display:none}}
