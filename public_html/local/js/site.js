@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const track=slider.querySelector('[data-home-slider-track]');
     const slides=track?[...track.querySelectorAll(':scope>[data-home-slider-slide]')]:[];
     const dots=[...slider.querySelectorAll('[data-home-slider-dot]')];
+    const editButton=slider.querySelector('[data-home-slider-edit]');
+    const deleteButton=slider.querySelector('[data-home-slider-delete]');
     if(!track||slides.length<2)return;
     let current=0;
     let position=1;
@@ -80,6 +82,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
     const stop=()=>{if(timer){window.clearInterval(timer);timer=0;}};
     const start=()=>{stop();if(delay&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=window.setInterval(()=>show(current+1),delay);};
+    const getActiveBannerUrl=attribute=>slides[current]?.getAttribute(attribute)||'';
+    editButton?.addEventListener('click',()=>{
+      const url=getActiveBannerUrl('data-banner-edit-url');
+      if(url)window.open(url,'_blank','noopener');
+    });
+    deleteButton?.addEventListener('click',()=>{
+      const url=getActiveBannerUrl('data-banner-delete-url');
+      if(url&&window.confirm('Удалить активный баннер?'))window.location.href=url;
+    });
     slider.querySelector('[data-home-slider-prev]')?.addEventListener('click',()=>{show(current-1);start();});
     slider.querySelector('[data-home-slider-next]')?.addEventListener('click',()=>{show(current+1);start();});
     dots.forEach((dot,index)=>dot.addEventListener('click',()=>{show(index);start();}));
