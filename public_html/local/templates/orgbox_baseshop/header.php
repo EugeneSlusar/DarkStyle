@@ -44,7 +44,17 @@ $siteName = (string) Config::get('site_name', 'Мой магазин');
 <div class="orgbox-baseshop">
 <header class="header" id="glavnaya">
     <nav class="nav wrap">
-        <a class="brand" href="/"><?=htmlspecialcharsbx(mb_strtoupper($siteName))?></a>
+        <a class="brand" href="/" aria-label="<?=htmlspecialcharsbx($siteName)?>"><?php
+            $APPLICATION->IncludeFile(
+                '/include/site-logo.php',
+                [],
+                [
+                    'MODE' => 'html',
+                    'NAME' => 'Текст логотипа',
+                    'SHOW_BORDER' => true,
+                ]
+            );
+        ?></a>
         <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span><span></span></button>
         <div class="menu">
             <a href="/#preimushchestva">Преимущества</a><a href="/catalog/">Каталог</a><a href="/#galereya">Галерея</a><a href="/#primenenie">Применение</a><a href="/#voprosy">FAQ</a>
