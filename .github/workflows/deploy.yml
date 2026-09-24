@@ -79,7 +79,20 @@ jobs:
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "cd '${DEPLOY_PATH}' && bash .deploy/sync_repo_from_git.sh --auto"
+            "cd '${DEPLOY_PATH}' && \
+             include_backup=\$(mktemp -d) && \
+             trap 'rm -rf -- \"\$include_backup\"' EXIT && \
+             if [[ -d public_html/include/orgbox_baseshop ]]; then \
+               mkdir -p \"\$include_backup/orgbox_baseshop\" && \
+               cp -a public_html/include/orgbox_baseshop/. \"\$include_backup/orgbox_baseshop/\"; \
+             fi && \
+             sync_status=0; \
+             bash .deploy/sync_repo_from_git.sh --auto || sync_status=\$?; \
+             if [[ -d \"\$include_backup/orgbox_baseshop\" ]]; then \
+               mkdir -p public_html/include/orgbox_baseshop && \
+               cp -a \"\$include_backup/orgbox_baseshop/.\" public_html/include/orgbox_baseshop/; \
+             fi; \
+             exit \$sync_status"
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
