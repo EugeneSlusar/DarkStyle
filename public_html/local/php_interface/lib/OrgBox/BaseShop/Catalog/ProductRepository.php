@@ -22,6 +22,7 @@ final class ProductRepository
     public function getSections(): array
     {
         $sections = [];
+        $stats = $this->getSectionStats();
         $result = \CIBlockSection::GetList(
             ['SORT' => 'ASC', 'NAME' => 'ASC'],
             ['IBLOCK_ID' => $this->iblockId, 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y'],
@@ -30,17 +31,49 @@ final class ProductRepository
         );
 
         while ($section = $result->GetNext()) {
+            $sectionId = (int) $section['ID'];
+            $picture = $this->filePath((int) $section['PICTURE']);
             $sections[] = [
-                'ID' => (int) $section['ID'],
+                'ID' => $sectionId,
                 'NAME' => (string) $section['NAME'],
                 'CODE' => (string) $section['CODE'],
                 'DESCRIPTION' => trim(strip_tags((string) $section['DESCRIPTION'])),
-                'PICTURE' => $this->filePath((int) $section['PICTURE']),
+                'PICTURE' => $picture !== '' ? $picture : (string) ($stats[$sectionId]['PICTURE'] ?? ''),
+                'COUNT' => (int) ($stats[$sectionId]['COUNT'] ?? 0),
                 'URL' => '/catalog/' . rawurlencode((string) $section['CODE']) . '/',
             ];
         }
 
         return $sections;
+    }
+
+    private function getSectionStats(): array
+    {
+        $stats = [];
+        $result = \CIBlockElement::GetList(
+            ['SORT' => 'ASC', 'ID' => 'ASC'],
+            ['IBLOCK_ID' => $this->iblockId, 'ACTIVE' => 'Y', 'ACTIVE_DATE' => 'Y'],
+            false,
+            false,
+            ['ID', 'IBLOCK_SECTION_ID', 'PREVIEW_PICTURE', 'DETAIL_PICTURE']
+        );
+
+        while ($element = $result->Fetch()) {
+            $sectionId = (int) $element['IBLOCK_SECTION_ID'];
+            if ($sectionId <= 0) {
+                continue;
+            }
+            if (!isset($stats[$sectionId])) {
+                $stats[$sectionId] = ['COUNT' => 0, 'PICTURE' => ''];
+            }
+            $stats[$sectionId]['COUNT']++;
+            if ($stats[$sectionId]['PICTURE'] === '') {
+                $pictureId = (int) ($element['DETAIL_PICTURE'] ?: $element['PREVIEW_PICTURE']);
+                $stats[$sectionId]['PICTURE'] = $this->filePath($pictureId);
+            }
+        }
+
+        return $stats;
     }
 
     public function getProducts(?string $sectionCode = null, int $limit = 0): array

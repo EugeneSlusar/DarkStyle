@@ -16,6 +16,8 @@ $requiredPaths = [
     '/include/orgbox_baseshop/home/order-cta.php',
     '/local/templates/orgbox_baseshop/footer.php',
     '/local/components/orgbox/catalog/class.php',
+    '/local/components/orgbox/catalog/templates/.default/sections.php',
+    '/local/components/orgbox/catalog/templates/.default/style.css',
     '/local/components/orgbox/checkout/class.php',
     '/local/components/orgbox/home_slider/class.php',
     '/local/php_interface/lib/OrgBox/BaseShop/Config.php',
@@ -85,6 +87,15 @@ $homePage = (string) file_get_contents($root . '/index.php');
 assert(str_contains($homePage, "SITE_DIR . 'include/orgbox_baseshop/home/'"));
 assert(str_contains($homePage, "'orgbox:home_slider'"));
 assert(!str_contains($homePage, "hero.php"));
+
+$catalogComponent = (string) file_get_contents($root . '/local/components/orgbox/catalog/class.php');
+assert(str_contains($catalogComponent, "includeComponentTemplate('sections')"));
+$catalogSections = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/sections.php');
+assert(str_contains($catalogSections, 'catalog-section-grid'));
+assert(str_contains($catalogSections, "['COUNT']"));
+$productRepository = (string) file_get_contents($root . '/local/php_interface/lib/OrgBox/BaseShop/Catalog/ProductRepository.php');
+assert(str_contains($productRepository, 'getSectionStats'));
+assert(str_contains($productRepository, "'COUNT' =>"));
 
 $sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/home_slider/class.php');
 assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));

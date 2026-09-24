@@ -61,8 +61,14 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             }
 
             $sectionCode = $segments[0] ?? null;
-            $items = $repository->getProducts($sectionCode);
             $sections = $repository->getSections();
+            if ($sectionCode === null) {
+                $APPLICATION->SetTitle('Каталог');
+                $this->arResult = ['SECTIONS' => $sections];
+                $this->includeComponentTemplate('sections');
+                return;
+            }
+
             $currentSection = null;
             foreach ($sections as $section) {
                 if ($section['CODE'] === $sectionCode) {
@@ -75,6 +81,7 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
                 return;
             }
 
+            $items = $repository->getProducts($sectionCode);
             $APPLICATION->SetTitle($currentSection['NAME'] ?? 'Каталог');
             $this->arResult = ['ITEMS' => $items, 'SECTIONS' => $sections, 'SECTION' => $currentSection];
             $this->includeComponentTemplate('list');
