@@ -43,11 +43,23 @@ final class Config
 
         $optionKey = $kind . '_iblock_id';
         $configuredId = (int) self::get($optionKey, 0);
-        if ($configuredId > 0 || !Loader::includeModule('iblock')) {
+        if (!Loader::includeModule('iblock')) {
             return $configuredId;
         }
 
         $definition = $definitions[$kind];
+        if ($configuredId > 0) {
+            $configured = \CIBlock::GetList([], [
+                'ID' => $configuredId,
+                'TYPE' => 'orgbox_baseshop',
+                'CODE' => $definition['code'],
+            ])->Fetch();
+            if ($configured) {
+                return $configuredId;
+            }
+            Option::delete(self::MODULE_ID, $optionKey);
+        }
+
         $row = \CIBlock::GetList([], [
             'TYPE' => 'orgbox_baseshop',
             'CODE' => $definition['code'],

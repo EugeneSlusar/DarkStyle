@@ -17,7 +17,15 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
         global $APPLICATION;
 
         try {
-            $iblockId = (int) ($this->arParams['IBLOCK_ID'] ?: Config::getIblockId('products'));
+            $requestedIblockId = (int) ($this->arParams['IBLOCK_ID'] ?? 0);
+            $requestedIblock = $requestedIblockId > 0
+                ? \CIBlock::GetList([], [
+                    'ID' => $requestedIblockId,
+                    'TYPE' => 'orgbox_baseshop',
+                    'CODE' => 'orgbox_baseshop_products',
+                ])->Fetch()
+                : false;
+            $iblockId = $requestedIblock ? $requestedIblockId : Config::getIblockId('products');
             $repository = new ProductRepository($iblockId);
             $this->addProductsAdminButton($iblockId);
             $mode = (string) ($this->arParams['MODE'] ?? 'catalog');
