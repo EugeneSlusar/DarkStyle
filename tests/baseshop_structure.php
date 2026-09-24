@@ -87,15 +87,14 @@ assert(!str_contains($homePage, "hero.php"));
 
 $sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/home_slider/class.php');
 assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
-assert(str_contains($sliderComponent, "'Добавить баннер'"));
 assert(str_contains($sliderComponent, 'getFallbackItems'));
 assert(str_contains($sliderComponent, 'applyDemoImages'));
 assert(str_contains($sliderComponent, '/local/assets/site/process-application-v2.jpg'));
 
 $sliderTemplate = (string) file_get_contents($root . '/local/components/orgbox/home_slider/templates/.default/template.php');
-assert(str_contains($sliderTemplate, "CIBlock::GetArrayByID"));
-assert(str_contains($sliderTemplate, "'Изменить баннер'"));
-assert(str_contains($sliderTemplate, "'Удалить баннер'"));
+assert(str_contains($sliderTemplate, 'Добавить баннер'));
+assert(str_contains($sliderTemplate, 'Изменить баннер'));
+assert(str_contains($sliderTemplate, 'Удалить баннер'));
 
 $setup = (string) file_get_contents($root . '/local/tools/orgbox_baseshop_setup.php');
 assert(str_contains($setup, "'orgbox_baseshop_home_banners'"));

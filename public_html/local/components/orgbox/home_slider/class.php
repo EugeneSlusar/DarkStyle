@@ -21,12 +21,13 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
 
         $iblockId = (int) ($this->arParams['IBLOCK_ID'] ?: Config::getIblockId('banners'));
         $items = $this->getItems($iblockId);
+        $iblockType = $iblockId > 0 ? (string) CIBlock::GetArrayByID($iblockId, 'IBLOCK_TYPE_ID') : '';
         $this->arResult = [
             'ITEMS' => $items !== [] ? $items : $this->getFallbackItems(),
             'IBLOCK_ID' => $iblockId,
+            'ADD_LINK' => $iblockId > 0 ? $this->elementEditUrl($iblockId, $iblockType) : '',
             'AUTOPLAY_DELAY' => max(0, (int) ($this->arParams['AUTOPLAY_DELAY'] ?? 7000)),
         ];
-        $this->addBannerAdminButton($iblockId);
         $this->includeComponentTemplate();
     }
 
@@ -107,22 +108,6 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             'EDIT_LINK' => '',
             'DELETE_LINK' => '',
         ]];
-    }
-
-    private function addBannerAdminButton(int $iblockId): void
-    {
-        global $USER;
-
-        if ($iblockId <= 0 || !is_object($USER) || !$USER->IsAdmin()) {
-            return;
-        }
-
-        $iblockType = (string) CIBlock::GetArrayByID($iblockId, 'IBLOCK_TYPE_ID');
-        $this->AddIncludeAreaIcon([
-            'URL' => "javascript:window.open('" . CUtil::JSEscape($this->elementEditUrl($iblockId, $iblockType)) . "', '_blank', 'noopener');void(0);",
-            'ICON' => 'bx-context-toolbar-create-icon',
-            'TITLE' => 'Добавить баннер',
-        ]);
     }
 
     private function elementEditUrl(int $iblockId, string $iblockType, int $elementId = 0): string

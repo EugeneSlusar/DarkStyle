@@ -6,26 +6,26 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
+global $APPLICATION, $USER;
+
 $items = $arResult['ITEMS'] ?? [];
 if ($items === []) {
     return;
 }
-$editTitle = (string) CIBlock::GetArrayByID((int) ($arResult['IBLOCK_ID'] ?? 0), 'ELEMENT_EDIT');
-$deleteTitle = (string) CIBlock::GetArrayByID((int) ($arResult['IBLOCK_ID'] ?? 0), 'ELEMENT_DELETE');
-$editTitle = $editTitle !== '' ? 'Изменить баннер' : 'Изменить баннер';
-$deleteTitle = $deleteTitle !== '' ? 'Удалить баннер' : 'Удалить баннер';
+$showEditActions = is_object($USER) && $USER->IsAdmin() && $APPLICATION->GetShowIncludeAreas();
 ?>
 <section class="home-slider" data-home-slider data-autoplay-delay="<?=intval($arResult['AUTOPLAY_DELAY'] ?? 7000)?>">
     <?php foreach ($items as $index => $item): ?>
-        <?php if ((int) $item['ID'] > 0): ?>
-            <?php
-            $this->AddEditAction($item['ID'], $item['EDIT_LINK'], $editTitle);
-            $this->AddDeleteAction($item['ID'], $item['DELETE_LINK'], $deleteTitle, ['CONFIRM' => 'Удалить баннер?']);
-            ?>
-        <?php endif; ?>
-        <article class="hero home-slider-slide<?=$index === 0 ? ' is-active' : ''?>" id="<?=$this->GetEditAreaId($item['ID'])?>" data-home-slider-slide aria-hidden="<?=$index === 0 ? 'false' : 'true'?>">
+        <article class="hero home-slider-slide<?=$index === 0 ? ' is-active' : ''?>" data-home-slider-slide aria-hidden="<?=$index === 0 ? 'false' : 'true'?>">
             <img class="hero-bg" src="<?=htmlspecialcharsbx($item['IMAGE'])?>" alt="<?=htmlspecialcharsbx($item['NAME'])?>">
             <div class="hero-shade"></div><div class="grid-overlay"></div>
+            <?php if ($showEditActions && (int) $item['ID'] > 0): ?>
+                <div class="home-slider-edit-actions" aria-label="Управление баннером">
+                    <a href="<?=htmlspecialcharsbx($arResult['ADD_LINK'])?>" target="_blank" rel="noopener">Добавить баннер</a>
+                    <a href="<?=htmlspecialcharsbx($item['EDIT_LINK'])?>" target="_blank" rel="noopener">Изменить баннер</a>
+                    <a class="is-danger" href="<?=htmlspecialcharsbx($item['DELETE_LINK'])?>" onclick="return window.confirm('Удалить баннер?')">Удалить баннер</a>
+                </div>
+            <?php endif; ?>
             <div class="wrap hero-content">
                 <?php if ($item['SUBTITLE'] !== ''): ?><div class="eyebrow"><span></span><?=htmlspecialcharsbx($item['SUBTITLE'])?></div><?php endif; ?>
                 <h1><?=nl2br(htmlspecialcharsbx($item['NAME']))?></h1>
