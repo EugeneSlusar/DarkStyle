@@ -7,8 +7,6 @@
 .orgbox-baseshop .header .brand-icon {
     flex: 0 0 auto;
     display: inline-flex;
-    width: 26px;
-    height: 26px;
     align-items: center;
     justify-content: center;
 }
