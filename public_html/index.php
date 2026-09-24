@@ -4,7 +4,7 @@ $APPLICATION->SetTitle('Съёмная тонировка для авто');
 
 $include = static function (string $file, string $name) use ($APPLICATION): void {
     $APPLICATION->IncludeFile(
-        '/include/home/' . $file,
+        SITE_DIR . 'include/orgbox_baseshop/home/' . $file,
         [],
         ['MODE' => 'html', 'NAME' => $name, 'SHOW_BORDER' => true]
     );

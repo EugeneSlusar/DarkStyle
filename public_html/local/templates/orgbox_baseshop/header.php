@@ -48,7 +48,7 @@ $siteName = (string) Config::get('site_name', 'Мой магазин');
         <a class="brand" href="/" aria-label="<?=htmlspecialcharsbx($siteName)?>">
             <span class="brand-icon" aria-hidden="true"><?php
                 $APPLICATION->IncludeFile(
-                    '/include/site-logo-icon.php',
+                    SITE_DIR . 'include/orgbox_baseshop/logo/icon.php',
                     [],
                     [
                         'MODE' => 'html',
@@ -59,7 +59,7 @@ $siteName = (string) Config::get('site_name', 'Мой магазин');
             ?></span>
             <span class="brand-text"><?php
                 $APPLICATION->IncludeFile(
-                    '/include/site-logo.php',
+                    SITE_DIR . 'include/orgbox_baseshop/logo/text.php',
                     [],
                     [
                         'MODE' => 'html',
