@@ -16,6 +16,7 @@ $requiredPaths = [
     '/include/orgbox_baseshop/home/order-cta.php',
     '/local/templates/orgbox_baseshop/footer.php',
     '/local/components/orgbox/catalog/class.php',
+    '/local/components/orgbox/catalog/templates/.default/_sections.php',
     '/local/components/orgbox/catalog/templates/.default/sections.php',
     '/local/components/orgbox/catalog/templates/.default/style.css',
     '/local/components/orgbox/checkout/class.php',
@@ -90,9 +91,12 @@ assert(!str_contains($homePage, "hero.php"));
 
 $catalogComponent = (string) file_get_contents($root . '/local/components/orgbox/catalog/class.php');
 assert(str_contains($catalogComponent, "includeComponentTemplate('sections')"));
-$catalogSections = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/sections.php');
+$catalogSections = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/_sections.php');
 assert(str_contains($catalogSections, 'catalog-section-grid'));
 assert(str_contains($catalogSections, "['COUNT']"));
+$catalogHome = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/home.php');
+assert(str_contains($catalogHome, "['SECTIONS']"));
+assert(str_contains($catalogHome, "require __DIR__ . '/_sections.php'"));
 $productRepository = (string) file_get_contents($root . '/local/php_interface/lib/OrgBox/BaseShop/Catalog/ProductRepository.php');
 assert(str_contains($productRepository, 'getSectionStats'));
 assert(str_contains($productRepository, "'COUNT' =>"));

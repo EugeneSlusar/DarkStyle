@@ -31,7 +31,8 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             $mode = (string) ($this->arParams['MODE'] ?? 'catalog');
 
             if ($mode === 'home') {
-                $this->arResult = ['ITEMS' => $repository->getProducts(null, max(1, (int) ($this->arParams['LIMIT'] ?? 8)))];
+                $limit = max(1, (int) ($this->arParams['LIMIT'] ?? 8));
+                $this->arResult = ['SECTIONS' => array_slice($repository->getSections(), 0, $limit)];
                 $this->includeComponentTemplate('home');
                 return;
             }
