@@ -23,7 +23,7 @@ if (!$targetType) {
 }
 
 $types = [];
-$typeList = \CIBlockType::GetList([], ['ID' => '']);
+$typeList = \CIBlockType::GetList([], []);
 while ($type = $typeList->Fetch()) {
     if ($type['ID'] !== $targetTypeId && mb_strtolower(trim((string) $type['NAME'])) === mb_strtolower('Темный стиль')) {
         $types[] = $type;
