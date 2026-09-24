@@ -5,6 +5,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__) . '/public_html';
 $requiredPaths = [
     '/local/templates/orgbox_baseshop/header.php',
+    '/include/site-logo-icon.php',
     '/include/site-logo.php',
     '/local/templates/orgbox_baseshop/footer.php',
     '/local/components/orgbox/catalog/class.php',
@@ -14,6 +15,7 @@ $requiredPaths = [
     '/local/ajax/orgbox-baseshop-checkout.php',
     '/local/tools/orgbox_baseshop_setup.php',
     '/local/tools/orgbox_baseshop_import_catalog.php',
+    '/local/css/logo.css',
     '/local/css/themes/dark.css',
 ];
 
@@ -61,6 +63,8 @@ $templateDescription = (string) file_get_contents($root . '/local/templates/orgb
 assert(str_contains($templateDescription, 'orgBox: BaseShop'));
 
 $templateHeader = (string) file_get_contents($root . '/local/templates/orgbox_baseshop/header.php');
+assert(str_contains($templateHeader, "'/include/site-logo-icon.php'"));
+assert(str_contains($templateHeader, "'NAME' => 'Знак логотипа'"));
 assert(str_contains($templateHeader, "'/include/site-logo.php'"));
 assert(str_contains($templateHeader, "'NAME' => 'Текст логотипа'"));
 assert(str_contains($templateHeader, "'SHOW_BORDER' => true"));

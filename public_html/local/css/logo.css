@@ -1,0 +1,13 @@
+.orgbox-baseshop .header .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.orgbox-baseshop .header .brand-icon {
+    flex: 0 0 auto;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0;
+}
