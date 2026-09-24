@@ -26,7 +26,7 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
             'ITEMS' => $items !== [] ? $items : $this->getFallbackItems(),
             'IBLOCK_ID' => $iblockId,
             'ADD_LINK' => $iblockId > 0 ? $this->elementEditUrl($iblockId, $iblockType) : '',
-            'AUTOPLAY_DELAY' => max(0, (int) ($this->arParams['AUTOPLAY_DELAY'] ?? 7000)),
+            'AUTOPLAY_DELAY' => max(0, (int) ($this->arParams['AUTOPLAY_DELAY'] ?? 5000)),
         ];
         $this->addBannerAdminMenu((string) $this->arResult['ADD_LINK']);
         $this->includeComponentTemplate();
