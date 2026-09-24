@@ -6,7 +6,8 @@ $projectRoot = dirname(__DIR__);
 $cssDirectory = $projectRoot . '/public_html/local/css';
 $cssFiles = array_merge(
     glob($cssDirectory . '/*.css') ?: [],
-    glob($cssDirectory . '/themes/*.css') ?: []
+    glob($cssDirectory . '/themes/*.css') ?: [],
+    [$projectRoot . '/public_html/local/components/orgbox/home_slider/templates/.default/style.css']
 );
 
 assert($cssFiles !== []);

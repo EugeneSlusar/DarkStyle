@@ -21,7 +21,6 @@ $asset->addCss('/local/css/hero-title.css');
 $asset->addCss('/local/css/products.css');
 $asset->addCss('/local/css/template.css');
 $asset->addCss('/local/css/logo.css');
-$asset->addCss('/local/css/home-slider.css');
 $asset->addJs('/local/js/site.js');
 $requestPath = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 if (preg_match('#^/order(?:/|$)#', $requestPath)) {
