@@ -101,6 +101,8 @@ assert(str_contains($sliderTemplate, 'data-banner-delete-url'));
 
 $siteScript = (string) file_get_contents($root . '/local/js/site.js');
 assert(str_contains($siteScript, "slide.classList.toggle('is-active',active)"));
+assert(str_contains($siteScript, 'position=next+1'));
+assert(!str_contains($siteScript, 'position+='));
 
 $setup = (string) file_get_contents($root . '/local/tools/orgbox_baseshop_setup.php');
 assert(str_contains($setup, "'orgbox_baseshop_home_banners'"));
