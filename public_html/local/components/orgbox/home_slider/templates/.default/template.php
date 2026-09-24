@@ -12,6 +12,7 @@ if ($items === []) {
 }
 ?>
 <section class="home-slider" data-home-slider data-autoplay-delay="<?=intval($arResult['AUTOPLAY_DELAY'] ?? 7000)?>">
+    <div class="home-slider-track" data-home-slider-track>
     <?php foreach ($items as $index => $item): ?>
         <article class="hero home-slider-slide<?=$index === 0 ? ' is-active' : ''?>"
                  data-home-slider-slide
@@ -33,6 +34,7 @@ if ($items === []) {
             </div>
         </article>
     <?php endforeach; ?>
+    </div>
     <?php if (count($items) > 1): ?>
         <div class="home-slider-controls wrap">
             <button class="home-slider-arrow home-slider-prev" type="button" data-home-slider-prev aria-label="Предыдущий баннер">←</button>
