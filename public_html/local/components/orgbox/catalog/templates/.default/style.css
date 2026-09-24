@@ -2,6 +2,64 @@
     margin-bottom: 42px;
 }
 
+.orgbox-baseshop .catalog-section-page {
+    padding-top: 0;
+}
+
+.orgbox-baseshop .catalog-section-hero {
+    position: relative;
+    min-height: 430px;
+    overflow: hidden;
+    padding: 80px 8px 48px;
+    background: #0a0a0a;
+}
+
+.orgbox-baseshop .catalog-section-hero::before,
+.orgbox-baseshop .catalog-section-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.orgbox-baseshop .catalog-section-hero::before {
+    background-image: var(--catalog-section-background);
+    background-position: center;
+    background-size: cover;
+    filter: saturate(.82) brightness(.68);
+    transform: scale(1.015);
+}
+
+.orgbox-baseshop .catalog-section-hero::after {
+    background: linear-gradient(90deg, #080808f7 0%, #080808c9 48%, #08080870 100%),
+        linear-gradient(0deg, #090909 0%, transparent 42%);
+}
+
+.orgbox-baseshop .catalog-section-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.orgbox-baseshop .catalog-section-hero .section-head {
+    margin-bottom: 42px;
+}
+
+.orgbox-baseshop .catalog-section-hero .section-head h1 {
+    max-width: 100%;
+    color: #fff;
+    text-shadow: 0 5px 35px #000;
+}
+
+.orgbox-baseshop .catalog-section-hero .catalog-tags {
+    margin: 0;
+    border-color: #ffffff24;
+    background: #0b0b0bd9;
+    backdrop-filter: blur(8px);
+}
+
+.orgbox-baseshop .catalog-section-products {
+    margin-top: 56px;
+}
+
 .orgbox-baseshop .catalog-section-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -90,6 +148,11 @@
     .orgbox-baseshop .catalog-sections-page .section-head > p {
         margin-top: 18px;
         text-align: left;
+    }
+
+    .orgbox-baseshop .catalog-section-hero {
+        min-height: 360px;
+        padding: 58px 0 34px;
     }
 }
 
