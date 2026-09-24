@@ -83,8 +83,8 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
 
         $demoImages = [
             'https://cdn-ru.bitrix24.ru/b21728636/ai/6cc/6cc0a82d4221ab6c976fc2fc3d588dbe/RP9k8c2e6BeSuz0oM9Nw5HwDTnQVZQk4.jpg',
-            '/local/assets/site/process-installation.jpg',
-            '/local/assets/site/process-installation.jpg',
+            '/local/assets/site/process-application-v2.jpg',
+            '/local/assets/site/process-application-v2.jpg',
         ];
         foreach ($items as $index => &$item) {
             $item['IMAGE'] = $demoImages[$index];
