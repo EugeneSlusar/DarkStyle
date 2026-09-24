@@ -10,7 +10,7 @@ $include = static function (string $file, string $name) use ($APPLICATION): void
     );
 };
 
-$include('hero.php', 'Главный экран');
+$APPLICATION->IncludeComponent('orgbox:home_slider', '', ['AUTOPLAY_DELAY' => 7000, 'CACHE_TIME' => 3600]);
 $include('benefits.php', 'Преимущества');
 ?>
 <section class="section catalog" id="katalog">

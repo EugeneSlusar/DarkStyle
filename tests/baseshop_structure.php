@@ -8,7 +8,6 @@ $requiredPaths = [
     '/include/orgbox_baseshop/logo/before.php',
     '/include/orgbox_baseshop/logo/icon.php',
     '/include/orgbox_baseshop/logo/text.php',
-    '/include/orgbox_baseshop/home/hero.php',
     '/include/orgbox_baseshop/home/benefits.php',
     '/include/orgbox_baseshop/home/catalog-heading.php',
     '/include/orgbox_baseshop/home/portfolio.php',
@@ -18,12 +17,14 @@ $requiredPaths = [
     '/local/templates/orgbox_baseshop/footer.php',
     '/local/components/orgbox/catalog/class.php',
     '/local/components/orgbox/checkout/class.php',
+    '/local/components/orgbox/home_slider/class.php',
     '/local/php_interface/lib/OrgBox/BaseShop/Config.php',
     '/local/php_interface/orgbox_baseshop/config.php',
     '/local/ajax/orgbox-baseshop-checkout.php',
     '/local/tools/orgbox_baseshop_setup.php',
     '/local/tools/orgbox_baseshop_import_catalog.php',
     '/local/css/logo.css',
+    '/local/css/home-slider.css',
     '/local/css/themes/dark.css',
 ];
 
@@ -81,6 +82,16 @@ assert(str_contains($templateHeader, "'SHOW_BORDER' => true"));
 
 $homePage = (string) file_get_contents($root . '/index.php');
 assert(str_contains($homePage, "SITE_DIR . 'include/orgbox_baseshop/home/'"));
+assert(str_contains($homePage, "'orgbox:home_slider'"));
+assert(!str_contains($homePage, "hero.php"));
+
+$sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/home_slider/class.php');
+assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
+assert(str_contains($sliderComponent, "'Добавить баннер'"));
+
+$setup = (string) file_get_contents($root . '/local/tools/orgbox_baseshop_setup.php');
+assert(str_contains($setup, "'orgbox_baseshop_home_banners'"));
+assert(str_contains($setup, "'Баннеры на главной'"));
 
 $catalogData = (string) file_get_contents($root . '/local/js/catalog-data.js');
 $catalogScript = (string) file_get_contents($root . '/local/js/catalog.js');

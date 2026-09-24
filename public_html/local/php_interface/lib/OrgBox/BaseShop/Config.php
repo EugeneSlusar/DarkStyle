@@ -35,6 +35,7 @@ final class Config
         $definitions = [
             'products' => ['properties' => ['PRICE', 'ARTICLE'], 'code' => 'orgbox_baseshop_products'],
             'orders' => ['properties' => ['PRODUCT_ID', 'TOTAL', 'STATUS'], 'code' => 'orgbox_baseshop_orders'],
+            'banners' => ['properties' => ['SUBTITLE', 'BUTTON_TEXT'], 'code' => 'orgbox_baseshop_home_banners'],
         ];
         if (!isset($definitions[$kind])) {
             throw new \InvalidArgumentException('Неизвестный тип инфоблока.');

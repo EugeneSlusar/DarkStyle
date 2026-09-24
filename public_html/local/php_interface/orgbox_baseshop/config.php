@@ -5,6 +5,7 @@ declare(strict_types=1);
 $defaults = [
     'products_iblock_id' => 0,
     'orders_iblock_id' => 0,
+    'banners_iblock_id' => 0,
     'manager_email' => '',
     'site_name' => 'Мой магазин',
     'theme' => 'dark',

@@ -101,6 +101,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             $ensureProperty($productsId, $code, $name, $type, $multiple);
         }
 
+        $bannersId = $findIblock($typeId, 'orgbox_baseshop_home_banners');
+        if ($bannersId <= 0) {
+            $iblock = new CIBlock();
+            $bannersId = (int) $iblock->Add([
+                'ACTIVE' => 'Y',
+                'NAME' => 'Баннеры на главной',
+                'CODE' => 'orgbox_baseshop_home_banners',
+                'IBLOCK_TYPE_ID' => $typeId,
+                'LID' => [SITE_ID],
+                'SORT' => 150,
+                'VERSION' => 2,
+                'GROUP_ID' => ['1' => 'X', '2' => 'R'],
+            ]);
+            if ($bannersId <= 0) {
+                throw new RuntimeException('Не удалось создать инфоблок баннеров.');
+            }
+        }
+        $bannersIblock = new CIBlock();
+        if (!$bannersIblock->Update($bannersId, [
+            'IBLOCK_TYPE_ID' => $typeId,
+            'CODE' => 'orgbox_baseshop_home_banners',
+        ])) {
+            throw new RuntimeException('Не удалось обновить идентификаторы инфоблока баннеров: ' . $bannersIblock->LAST_ERROR);
+        }
+        $bannerProperties = [
+            ['SUBTITLE', 'Надзаголовок', 'S', false],
+            ['BUTTON_TEXT', 'Текст основной кнопки', 'S', false],
+            ['BUTTON_LINK', 'Ссылка основной кнопки', 'S', false],
+            ['SECOND_BUTTON_TEXT', 'Текст дополнительной ссылки', 'S', false],
+            ['SECOND_BUTTON_LINK', 'Ссылка дополнительной ссылки', 'S', false],
+        ];
+        foreach ($bannerProperties as [$code, $name, $type, $multiple]) {
+            $ensureProperty($bannersId, $code, $name, $type, $multiple);
+        }
+
+        if (!CIBlockElement::GetList([], ['IBLOCK_ID' => $bannersId])->Fetch()) {
+            $picturePath = $_SERVER['DOCUMENT_ROOT'] . '/local/assets/site/process-application-v2.jpg';
+            $bannerDefinitions = [
+                ['Новый уровень приватности', "Съёмная тонировка\nТвой стиль без границ", 'Измени облик авто за считанные минуты и верни заводской вид в любой момент.', 100],
+                ['Комфорт в каждой поездке', "Тонировка\nбез лишних усилий", 'Готовый комплект для автомобиля — установка занимает считанные минуты.', 200],
+                ['Стиль, который можно менять', "Съёмная плёнка\nдля вашего авто", 'Выберите светопропускаемость и оформите заказ с доставкой.', 300],
+            ];
+            foreach ($bannerDefinitions as [$subtitle, $name, $description, $sort]) {
+                $element = new CIBlockElement();
+                if (!$element->Add([
+                    'IBLOCK_ID' => $bannersId,
+                    'ACTIVE' => 'Y',
+                    'NAME' => $name,
+                    'PREVIEW_TEXT' => $description,
+                    'PREVIEW_TEXT_TYPE' => 'text',
+                    'PREVIEW_PICTURE' => is_file($picturePath) ? CFile::MakeFileArray($picturePath) : null,
+                    'SORT' => $sort,
+                    'PROPERTY_VALUES' => [
+                        'SUBTITLE' => $subtitle,
+                        'BUTTON_TEXT' => 'Смотреть каталог',
+                        'BUTTON_LINK' => '/catalog/',
+                        'SECOND_BUTTON_TEXT' => 'Как это работает',
+                        'SECOND_BUTTON_LINK' => '#primenenie',
+                    ],
+                ])) {
+                    throw new RuntimeException('Не удалось создать демонстрационный баннер: ' . $element->LAST_ERROR);
+                }
+            }
+        }
+
         $ordersId = $findIblock($typeId, 'orgbox_baseshop_orders');
         if ($ordersId <= 0) {
             $iblock = new \CIBlock();
@@ -139,6 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
 
         Option::set('orgbox.baseshop', 'products_iblock_id', (string) $productsId);
         Option::set('orgbox.baseshop', 'orders_iblock_id', (string) $ordersId);
+        Option::set('orgbox.baseshop', 'banners_iblock_id', (string) $bannersId);
         Option::set('orgbox.baseshop', 'manager_email', trim((string) ($_POST['manager_email'] ?? '')));
         Option::set('orgbox.baseshop', 'phone', trim((string) ($_POST['phone'] ?? '')));
 
@@ -195,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             }
         }
 
-        $messages[] = sprintf('Настройка завершена. Инфоблок товаров: %d, заказов: %d.', $productsId, $ordersId);
+        $messages[] = sprintf('Настройка завершена. Инфоблок товаров: %d, баннеров: %d, заказов: %d.', $productsId, $bannersId, $ordersId);
     } catch (Throwable $exception) {
         $errors[] = $exception->getMessage();
     }
