@@ -27,7 +27,9 @@ $typeList = \CIBlockType::GetList([], []);
 while ($type = $typeList->Fetch()) {
     $typeId = (string) $type['ID'];
     $localizedType = \CIBlockType::GetByIDLang($typeId, LANGUAGE_ID);
-    if ($typeId !== $targetTypeId && mb_strtolower(trim((string) ($localizedType['NAME'] ?? ''))) === mb_strtolower('Темный стиль')) {
+    $localizedName = mb_strtolower(trim((string) ($localizedType['NAME'] ?? '')));
+    $localizedName = str_replace('ё', 'е', $localizedName);
+    if ($typeId !== $targetTypeId && $localizedName === 'темный стиль') {
         $types[] = array_merge($type, (array) $localizedType);
     }
 }
