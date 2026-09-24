@@ -88,6 +88,7 @@ assert(!str_contains($homePage, "hero.php"));
 $sliderComponent = (string) file_get_contents($root . '/local/components/orgbox/home_slider/class.php');
 assert(str_contains($sliderComponent, "Config::getIblockId('banners')"));
 assert(str_contains($sliderComponent, "'Добавить баннер'"));
+assert(str_contains($sliderComponent, 'getFallbackItems'));
 
 $setup = (string) file_get_contents($root . '/local/tools/orgbox_baseshop_setup.php');
 assert(str_contains($setup, "'orgbox_baseshop_home_banners'"));

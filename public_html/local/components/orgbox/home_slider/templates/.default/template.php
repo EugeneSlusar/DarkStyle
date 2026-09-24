@@ -13,10 +13,12 @@ if ($items === []) {
 ?>
 <section class="home-slider" data-home-slider data-autoplay-delay="<?=intval($arResult['AUTOPLAY_DELAY'] ?? 7000)?>">
     <?php foreach ($items as $index => $item): ?>
-        <?php
-        $this->AddEditAction($item['ID'], $item['EDIT_LINK'], ['TITLE' => 'Изменить баннер']);
-        $this->AddDeleteAction($item['ID'], $item['DELETE_LINK'], ['CONFIRM' => 'Удалить баннер?']);
-        ?>
+        <?php if ((int) $item['ID'] > 0): ?>
+            <?php
+            $this->AddEditAction($item['ID'], $item['EDIT_LINK'], ['TITLE' => 'Изменить баннер']);
+            $this->AddDeleteAction($item['ID'], $item['DELETE_LINK'], ['CONFIRM' => 'Удалить баннер?']);
+            ?>
+        <?php endif; ?>
         <article class="hero home-slider-slide<?=$index === 0 ? ' is-active' : ''?>" id="<?=$this->GetEditAreaId($item['ID'])?>" data-home-slider-slide aria-hidden="<?=$index === 0 ? 'false' : 'true'?>">
             <img class="hero-bg" src="<?=htmlspecialcharsbx($item['IMAGE'])?>" alt="<?=htmlspecialcharsbx($item['NAME'])?>">
             <div class="hero-shade"></div><div class="grid-overlay"></div>

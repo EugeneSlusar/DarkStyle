@@ -20,8 +20,9 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
         }
 
         $iblockId = (int) ($this->arParams['IBLOCK_ID'] ?: Config::getIblockId('banners'));
+        $items = $this->getItems($iblockId);
         $this->arResult = [
-            'ITEMS' => $this->getItems($iblockId),
+            'ITEMS' => $items !== [] ? $items : $this->getFallbackItems(),
             'IBLOCK_ID' => $iblockId,
             'AUTOPLAY_DELAY' => max(0, (int) ($this->arParams['AUTOPLAY_DELAY'] ?? 7000)),
         ];
@@ -65,6 +66,23 @@ class OrgBoxBaseShopHomeSliderComponent extends CBitrixComponent
         }
 
         return $items;
+    }
+
+    private function getFallbackItems(): array
+    {
+        return [[
+            'ID' => 0,
+            'NAME' => "Съёмная тонировка:\nТвой стиль без границ",
+            'DESCRIPTION' => 'Запустите настройку BaseShop, чтобы создать управляемые баннеры главной страницы.',
+            'IMAGE' => 'https://cdn-ru.bitrix24.ru/b21728636/ai/6cc/6cc0a82d4221ab6c976fc2fc3d588dbe/RP9k8c2e6BeSuz0oM9Nw5HwDTnQVZQk4.jpg',
+            'SUBTITLE' => 'Новый уровень приватности',
+            'BUTTON_TEXT' => 'Смотреть каталог',
+            'BUTTON_LINK' => '/catalog/',
+            'SECOND_BUTTON_TEXT' => 'Как это работает',
+            'SECOND_BUTTON_LINK' => '#primenenie',
+            'EDIT_LINK' => '',
+            'DELETE_LINK' => '',
+        ]];
     }
 
     private function addBannerAdminButton(int $iblockId): void
