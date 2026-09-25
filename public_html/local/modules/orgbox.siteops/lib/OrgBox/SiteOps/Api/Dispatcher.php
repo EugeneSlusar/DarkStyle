@@ -17,6 +17,7 @@ final class Dispatcher
         return match ($operation) {
             'seo.templates.get' => ['templates' => $seo->getProductTemplates(), 'defaults' => $seo->defaults()],
             'seo.templates.update' => ['templates' => $seo->updateProductTemplates((array) ($request['templates'] ?? []))],
+            'seo.templates.apply_defaults' => ['templates' => $seo->updateProductTemplates($seo->defaults())],
             default => throw new RuntimeException('Неизвестная операция.'),
         };
     }

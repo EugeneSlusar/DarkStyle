@@ -26,7 +26,15 @@ final class TemplateService
         $iblock = $this->getProductIblock();
         $templates = (new \Bitrix\Iblock\InheritedProperty\IblockTemplates((int) $iblock['ID']))->findTemplates();
 
-        return array_intersect_key($templates, array_flip(self::TEMPLATE_KEYS));
+        $result = [];
+        foreach ($templates as $code => $template) {
+            if (!in_array($code, self::TEMPLATE_KEYS, true)) {
+                continue;
+            }
+            $result[$code] = is_array($template) ? (string) ($template['TEMPLATE'] ?? '') : (string) $template;
+        }
+
+        return $result;
     }
 
     public function updateProductTemplates(array $templates): array
