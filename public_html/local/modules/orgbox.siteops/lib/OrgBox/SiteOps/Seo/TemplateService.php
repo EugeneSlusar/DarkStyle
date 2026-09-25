@@ -24,7 +24,7 @@ final class TemplateService
     public function getProductTemplates(): array
     {
         $iblock = $this->getProductIblock();
-        $templates = $this->normalizeTemplates(\CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES'));
+        $templates = (new \Bitrix\Iblock\InheritedProperty\IblockTemplates((int) $iblock['ID']))->findTemplates();
 
         return array_intersect_key($templates, array_flip(self::TEMPLATE_KEYS));
     }
@@ -32,7 +32,8 @@ final class TemplateService
     public function updateProductTemplates(array $templates): array
     {
         $iblock = $this->getProductIblock();
-        $current = $this->normalizeTemplates(\CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES'));
+        $templateManager = new \Bitrix\Iblock\InheritedProperty\IblockTemplates((int) $iblock['ID']);
+        $current = $templateManager->findTemplates();
         foreach ($templates as $key => $value) {
             if (!in_array($key, self::TEMPLATE_KEYS, true) || !is_string($value)) {
                 throw new RuntimeException('Недопустимое SEO-поле.');
@@ -43,10 +44,8 @@ final class TemplateService
             $current[$key] = trim($value);
         }
 
-        $updater = new \CIBlock();
-        if (!$updater->Update((int) $iblock['ID'], ['IPROPERTY_TEMPLATES' => $current])) {
-            throw new RuntimeException('Не удалось сохранить SEO-шаблоны: ' . $updater->LAST_ERROR);
-        }
+        $templateManager->set($current);
+        (new \Bitrix\Iblock\InheritedProperty\IblockValues((int) $iblock['ID']))->clearValues();
         \CIBlock::clearIblockTagCache((int) $iblock['ID']);
 
         return $this->getProductTemplates();
@@ -55,14 +54,14 @@ final class TemplateService
     public function defaults(): array
     {
         return [
-            'SECTION_META_TITLE' => 'Съёмная тонировка для #SECTION_NAME# — купить | Тёмный стиль',
-            'SECTION_META_DESCRIPTION' => 'Купить съёмную тонировку для #SECTION_NAME#. Подберите комплект по светопропускаемости и оформите заказ с доставкой.',
+            'SECTION_META_TITLE' => 'Съёмная тонировка для {=this.NAME} — купить | Тёмный стиль',
+            'SECTION_META_DESCRIPTION' => 'Купить съёмную тонировку для {=this.NAME}. Подберите комплект по светопропускаемости и оформите заказ с доставкой.',
             'SECTION_META_KEYWORDS' => '',
-            'SECTION_PAGE_TITLE' => 'Съёмная тонировка для #SECTION_NAME#',
-            'ELEMENT_META_TITLE' => '#ELEMENT_NAME# — купить | Тёмный стиль',
-            'ELEMENT_META_DESCRIPTION' => '#ELEMENT_NAME#. Съёмная силиконовая тонировка для автомобиля. Заказ с доставкой.',
+            'SECTION_PAGE_TITLE' => 'Съёмная тонировка для {=this.NAME}',
+            'ELEMENT_META_TITLE' => '{=this.NAME} — купить | Тёмный стиль',
+            'ELEMENT_META_DESCRIPTION' => '{=this.NAME}. Съёмная силиконовая тонировка для автомобиля. Заказ с доставкой.',
             'ELEMENT_META_KEYWORDS' => '',
-            'ELEMENT_PAGE_TITLE' => '#ELEMENT_NAME#',
+            'ELEMENT_PAGE_TITLE' => '{=this.NAME}',
         ];
     }
 
@@ -77,16 +76,4 @@ final class TemplateService
         return $iblock;
     }
 
-    private function normalizeTemplates(mixed $templates): array
-    {
-        if (is_array($templates)) {
-            return $templates;
-        }
-        if (is_string($templates) && $templates !== '') {
-            $unserialized = @unserialize($templates, ['allowed_classes' => false]);
-            return is_array($unserialized) ? $unserialized : [];
-        }
-
-        return [];
-    }
 }
