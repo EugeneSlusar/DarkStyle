@@ -64,7 +64,9 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             $sectionCode = $segments[0] ?? null;
             $sections = $repository->getSections();
             if ($sectionCode === null) {
-                $APPLICATION->SetTitle('Каталог');
+                $catalogTitle = 'Каталог съёмной тонировки — Тёмный стиль';
+                $APPLICATION->SetTitle($catalogTitle);
+                $APPLICATION->SetPageProperty('title', $catalogTitle);
                 $this->arResult = ['SECTIONS' => $sections];
                 $this->includeComponentTemplate('sections');
                 return;
@@ -159,6 +161,7 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             $pageTitle = trim((string) ($values[$prefix . '_PAGE_TITLE'] ?? ''));
 
             $APPLICATION->SetTitle($metaTitle !== '' ? $metaTitle : $fallbackH1);
+            $APPLICATION->SetPageProperty('title', $metaTitle !== '' ? $metaTitle : $fallbackH1);
             if ($metaDescription !== '') {
                 $APPLICATION->SetPageProperty('description', $metaDescription);
             }
@@ -169,6 +172,7 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             return $pageTitle !== '' ? $pageTitle : $fallbackH1;
         } catch (\Throwable) {
             $APPLICATION->SetTitle($fallbackH1);
+            $APPLICATION->SetPageProperty('title', $fallbackH1);
             return $fallbackH1;
         }
     }

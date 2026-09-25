@@ -38,7 +38,7 @@ $siteName = (string) Config::get('site_name', 'Мой магазин');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
     <?php $APPLICATION->ShowHead(); ?>
-    <title><?php $APPLICATION->ShowTitle(); ?> — <?=htmlspecialcharsbx($siteName)?></title>
+    <title><?php $APPLICATION->ShowTitle(); ?></title>
 </head>
 <body class="orgbox-baseshop-page">
 <?php $APPLICATION->ShowPanel(); ?>

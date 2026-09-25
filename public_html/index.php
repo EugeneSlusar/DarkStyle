@@ -1,6 +1,6 @@
 <?php
 require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/header.php';
-$APPLICATION->SetTitle('Съёмная тонировка для авто');
+$APPLICATION->SetTitle('Съёмная тонировка для авто — Тёмный стиль');
 
 $include = static function (string $file, string $name) use ($APPLICATION): void {
     $APPLICATION->IncludeFile(
