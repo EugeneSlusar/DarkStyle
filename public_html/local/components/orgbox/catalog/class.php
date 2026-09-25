@@ -55,8 +55,8 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
                     $this->notFound();
                     return;
                 }
-                $APPLICATION->SetTitle($item['NAME']);
-                $this->arResult = ['ITEM' => $item];
+                $seoH1 = $this->applyElementSeo($iblockId, (int) $item['ID'], (string) $item['NAME']);
+                $this->arResult = ['ITEM' => $item, 'SEO_H1' => $seoH1];
                 $this->includeComponentTemplate('detail');
                 return;
             }
@@ -83,8 +83,9 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             }
 
             $items = $repository->getProducts($sectionCode);
-            $APPLICATION->SetTitle($currentSection['NAME'] ?? 'Каталог');
-            $this->arResult = ['ITEMS' => $items, 'SECTIONS' => $sections, 'SECTION' => $currentSection];
+            $sectionName = (string) ($currentSection['NAME'] ?? 'Каталог');
+            $seoH1 = $this->applySectionSeo($iblockId, (int) $currentSection['ID'], $sectionName);
+            $this->arResult = ['ITEMS' => $items, 'SECTIONS' => $sections, 'SECTION' => $currentSection, 'SEO_H1' => $seoH1];
             \Bitrix\Main\Page\Asset::getInstance()->addJs('/local/components/orgbox/catalog/templates/.default/script.js');
             $this->includeComponentTemplate('list');
         } catch (Throwable $exception) {
@@ -126,5 +127,49 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
         @define('ERROR_404', 'Y');
         $this->arResult = ['ERROR' => 'Страница не найдена.'];
         $this->includeComponentTemplate('error');
+    }
+
+    private function applySectionSeo(int $iblockId, int $sectionId, string $fallbackH1): string
+    {
+        return $this->applyInheritedSeo(
+            new \Bitrix\Iblock\InheritedProperty\SectionValues($iblockId, $sectionId),
+            'SECTION',
+            $fallbackH1
+        );
+    }
+
+    private function applyElementSeo(int $iblockId, int $elementId, string $fallbackH1): string
+    {
+        return $this->applyInheritedSeo(
+            new \Bitrix\Iblock\InheritedProperty\ElementValues($iblockId, $elementId),
+            'ELEMENT',
+            $fallbackH1
+        );
+    }
+
+    private function applyInheritedSeo(object $valuesProvider, string $prefix, string $fallbackH1): string
+    {
+        global $APPLICATION;
+
+        try {
+            $values = $valuesProvider->getValues();
+            $metaTitle = trim((string) ($values[$prefix . '_META_TITLE'] ?? ''));
+            $metaDescription = trim((string) ($values[$prefix . '_META_DESCRIPTION'] ?? ''));
+            $metaKeywords = trim((string) ($values[$prefix . '_META_KEYWORDS'] ?? ''));
+            $pageTitle = trim((string) ($values[$prefix . '_PAGE_TITLE'] ?? ''));
+
+            $APPLICATION->SetTitle($metaTitle !== '' ? $metaTitle : $fallbackH1);
+            if ($metaDescription !== '') {
+                $APPLICATION->SetPageProperty('description', $metaDescription);
+            }
+            if ($metaKeywords !== '') {
+                $APPLICATION->SetPageProperty('keywords', $metaKeywords);
+            }
+
+            return $pageTitle !== '' ? $pageTitle : $fallbackH1;
+        } catch (\Throwable) {
+            $APPLICATION->SetTitle($fallbackH1);
+            return $fallbackH1;
+        }
     }
 }

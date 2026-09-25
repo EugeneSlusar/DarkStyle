@@ -6,7 +6,7 @@ $sectionPicture = (string) ($arResult['SECTION']['PICTURE'] ?? '');
     <div class="wrap">
         <div class="catalog-section-hero"<?=$sectionPicture !== '' ? ' style="--catalog-section-background:url(\'' . htmlspecialcharsbx($sectionPicture) . '\')"' : ''?>>
             <div class="catalog-section-hero-content">
-                <div class="section-head"><div><a class="number catalog-back-link" href="/catalog/">КАТАЛОГ</a><h1><?=htmlspecialcharsbx($arResult['SECTION']['NAME'] ?? 'Каталог')?></h1></div></div>
+                <div class="section-head"><div><a class="number catalog-back-link" href="/catalog/">КАТАЛОГ</a><h1><?=htmlspecialcharsbx($arResult['SEO_H1'] ?? $arResult['SECTION']['NAME'] ?? 'Каталог')?></h1></div></div>
             </div>
         </div>
         <div class="catalog-section-products">

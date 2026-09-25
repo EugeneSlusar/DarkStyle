@@ -13,7 +13,7 @@ $images = $item['GALLERY'] ?: ['/local/assets/product-placeholder.svg'];
             </div>
             <div class="product-detail-info">
                 <span class="number"><?=htmlspecialcharsbx($item['BADGE'] ?: $item['SECTION']['NAME'])?></span>
-                <h1><?=htmlspecialcharsbx($item['NAME'])?></h1>
+                <h1><?=htmlspecialcharsbx($arResult['SEO_H1'] ?? $item['NAME'])?></h1>
                 <p class="detail-price"><?=number_format($item['PRICE'], 0, ',', ' ')?> ₽<?php if ($item['OLD_PRICE'] > $item['PRICE']): ?> <s><?=number_format($item['OLD_PRICE'], 0, ',', ' ')?> ₽</s><?php endif; ?></p>
                 <p class="detail-description"><?=nl2br(htmlspecialcharsbx($item['DETAIL_TEXT'] ?: $item['PREVIEW_TEXT']))?></p>
                 <dl class="product-specs">
