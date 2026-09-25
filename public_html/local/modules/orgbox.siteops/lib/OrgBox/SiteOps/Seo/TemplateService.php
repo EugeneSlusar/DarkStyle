@@ -41,7 +41,7 @@ final class TemplateService
     {
         $iblock = $this->getProductIblock();
         $templateManager = new \Bitrix\Iblock\InheritedProperty\IblockTemplates((int) $iblock['ID']);
-        $current = $templateManager->findTemplates();
+        $updated = [];
         foreach ($templates as $key => $value) {
             if (!in_array($key, self::TEMPLATE_KEYS, true) || !is_string($value)) {
                 throw new RuntimeException('Недопустимое SEO-поле.');
@@ -49,10 +49,10 @@ final class TemplateService
             if (mb_strlen($value) > 500) {
                 throw new RuntimeException('SEO-шаблон не может быть длиннее 500 символов.');
             }
-            $current[$key] = trim($value);
+            $updated[$key] = trim($value);
         }
 
-        $templateManager->set($current);
+        $templateManager->set($updated);
         (new \Bitrix\Iblock\InheritedProperty\IblockValues((int) $iblock['ID']))->clearValues();
         \CIBlock::clearIblockTagCache((int) $iblock['ID']);
 
