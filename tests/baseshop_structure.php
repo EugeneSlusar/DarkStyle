@@ -108,6 +108,8 @@ $catalogCard = (string) file_get_contents($root . '/local/components/orgbox/cata
 assert(str_contains($catalogCard, "array_slice(array_values(array_unique(\$images)), 0, 5)"));
 assert(str_contains($catalogCard, 'data-product-gallery'));
 assert(str_contains($catalogCard, 'data-product-gallery-image-src'));
+assert(str_contains($catalogCard, 'class="product-article"'));
+assert(!str_contains($catalogCard, 'class="product-more"'));
 $catalogScript = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/script.js');
 assert(str_contains($catalogScript, "addEventListener('pointermove'"));
 assert(str_contains($catalogScript, "addEventListener('pointerleave'"));
