@@ -77,6 +77,8 @@ $templateDescription = (string) file_get_contents($root . '/local/templates/orgb
 assert(str_contains($templateDescription, 'orgBox: BaseShop'));
 
 $templateHeader = (string) file_get_contents($root . '/local/templates/orgbox_baseshop/header.php');
+assert(str_contains($templateHeader, 'family=Montserrat:wght@400;500;600;700'));
+assert(!str_contains($templateHeader, 'family=Inter:'));
 assert(str_contains($templateHeader, "'include/orgbox_baseshop/logo/before.php'"));
 assert(str_contains($templateHeader, "'NAME' => 'Текст перед логотипом'"));
 assert(str_contains($templateHeader, "'include/orgbox_baseshop/logo/icon.php'"));
@@ -154,5 +156,6 @@ assert(str_contains($catalogScript, 'window.orgBoxBaseShopCatalog'));
 $theme = (string) file_get_contents($root . '/local/css/themes/dark.css');
 assert(str_contains($theme, '--theme-primary:'));
 assert(str_contains($theme, '--theme-accent:'));
+assert(str_contains($theme, '--theme-font-body: Montserrat,'));
 
 echo "BaseShop structure tests passed\n";

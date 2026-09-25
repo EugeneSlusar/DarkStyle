@@ -6,6 +6,6 @@
     --theme-primary: #00f2ff;
     --theme-accent: #ff00ff;
     --theme-text: #fff;
-    --theme-font-body: Inter, Arial, sans-serif;
-    --theme-font-display: "Russo One", Inter, Arial, sans-serif;
+    --theme-font-body: Montserrat, Arial, sans-serif;
+    --theme-font-display: "Russo One", Montserrat, Arial, sans-serif;
 }
