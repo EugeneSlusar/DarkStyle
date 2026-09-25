@@ -112,6 +112,7 @@ assert(str_contains($catalogCard, 'data-product-gallery'));
 assert(str_contains($catalogCard, 'data-product-gallery-image-src'));
 assert(str_contains($catalogCard, 'class="product-article"'));
 assert(str_contains($catalogCard, 'class="product-price-row"'));
+assert(!str_contains($catalogCard, 'class="product-meta"'));
 assert(!str_contains($catalogCard, 'class="product-more"'));
 $catalogScript = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/script.js');
 assert(str_contains($catalogScript, "addEventListener('pointermove'"));
