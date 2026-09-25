@@ -1,6 +1,5 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
-$this->addExternalJs($this->GetFolder() . '/script.js');
 $sectionPicture = (string) ($arResult['SECTION']['PICTURE'] ?? '');
 ?>
 <section class="section catalog catalog-page catalog-section-page">

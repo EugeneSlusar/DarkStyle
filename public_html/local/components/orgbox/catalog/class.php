@@ -85,6 +85,7 @@ class OrgBoxBaseShopCatalogComponent extends CBitrixComponent
             $items = $repository->getProducts($sectionCode);
             $APPLICATION->SetTitle($currentSection['NAME'] ?? 'Каталог');
             $this->arResult = ['ITEMS' => $items, 'SECTIONS' => $sections, 'SECTION' => $currentSection];
+            \Bitrix\Main\Page\Asset::getInstance()->addJs('/local/components/orgbox/catalog/templates/.default/script.js');
             $this->includeComponentTemplate('list');
         } catch (Throwable $exception) {
             $this->arResult = ['ERROR' => $exception->getMessage()];

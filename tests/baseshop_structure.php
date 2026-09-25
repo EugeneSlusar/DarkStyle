@@ -103,6 +103,7 @@ assert(str_contains($catalogList, "['SECTION']['PICTURE']"));
 assert(str_contains($catalogList, '--catalog-section-background'));
 assert(str_contains($catalogList, 'class="number catalog-back-link" href="/catalog/"'));
 assert(!str_contains($catalogList, 'catalog-tags'));
+assert(str_contains($catalogComponent, "Asset::getInstance()->addJs('/local/components/orgbox/catalog/templates/.default/script.js')"));
 $catalogCard = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/_card.php');
 assert(str_contains($catalogCard, "array_slice(array_values(array_unique(\$images)), 0, 5)"));
 assert(str_contains($catalogCard, 'data-product-gallery'));
