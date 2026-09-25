@@ -9,7 +9,6 @@
 .orgbox-baseshop .product-card .price{color:var(--theme-accent);font-size:21px;font-weight:900;margin:4px 0}
 .orgbox-baseshop .product-card .price s{color:#666;font-size:12px;font-weight:500;margin-left:5px}
 .orgbox-baseshop .product-card .rating{color:#8d8d8d;font-size:10px;margin:2px 0 40px}
-.orgbox-baseshop .product-card .rating::first-letter{color:#ffb000}
 .orgbox-baseshop .product-card a{right:20px;bottom:18px;left:20px;padding-top:12px;border-top:1px solid #292929;color:var(--theme-primary)}
 .orgbox-baseshop .product-card>.product-gallery{position:relative;inset:auto;width:100%;padding:0;background:#fff;border-bottom:1px solid #292929}
 .orgbox-baseshop .product-gallery .gallery-main{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;background:#fff;filter:none;transition:none}
