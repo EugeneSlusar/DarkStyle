@@ -19,6 +19,7 @@ $requiredPaths = [
     '/local/components/orgbox/catalog/templates/.default/_sections.php',
     '/local/components/orgbox/catalog/templates/.default/sections.php',
     '/local/components/orgbox/catalog/templates/.default/style.css',
+    '/local/components/orgbox/catalog/templates/.default/script.js',
     '/local/components/orgbox/checkout/class.php',
     '/local/components/orgbox/home_slider/class.php',
     '/local/php_interface/lib/OrgBox/BaseShop/Config.php',
@@ -102,6 +103,14 @@ assert(str_contains($catalogList, "['SECTION']['PICTURE']"));
 assert(str_contains($catalogList, '--catalog-section-background'));
 assert(str_contains($catalogList, 'class="number catalog-back-link" href="/catalog/"'));
 assert(!str_contains($catalogList, 'catalog-tags'));
+$catalogCard = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/_card.php');
+assert(str_contains($catalogCard, "array_slice(array_values(array_unique(\$images)), 0, 5)"));
+assert(str_contains($catalogCard, 'data-product-gallery'));
+assert(str_contains($catalogCard, 'data-product-gallery-image-src'));
+$catalogScript = (string) file_get_contents($root . '/local/components/orgbox/catalog/templates/.default/script.js');
+assert(str_contains($catalogScript, "addEventListener('pointermove'"));
+assert(str_contains($catalogScript, "addEventListener('pointerleave'"));
+assert(str_contains($catalogScript, 'data-product-gallery-image-src'));
 $productRepository = (string) file_get_contents($root . '/local/php_interface/lib/OrgBox/BaseShop/Catalog/ProductRepository.php');
 assert(str_contains($productRepository, 'getSectionStats'));
 assert(str_contains($productRepository, "'COUNT' =>"));

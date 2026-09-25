@@ -137,6 +137,48 @@
     color: var(--theme-primary);
 }
 
+.orgbox-baseshop .product-gallery {
+    position: relative;
+}
+
+.orgbox-baseshop .product-gallery-link {
+    display: block;
+    height: 100%;
+}
+
+.orgbox-baseshop .product-gallery-segments {
+    position: absolute;
+    z-index: 4;
+    right: 18px;
+    bottom: 12px;
+    left: 18px;
+    display: grid;
+    grid-template-columns: repeat(var(--product-gallery-count), minmax(0, 1fr));
+    gap: 4px;
+}
+
+.orgbox-baseshop .product-gallery-segment {
+    display: block;
+    width: 100%;
+    height: 5px;
+    min-width: 0;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 48%);
+    border-radius: 5px;
+    background: rgb(85 85 85 / 70%);
+    cursor: pointer;
+    transition: background-color .2s, border-color .2s, box-shadow .2s;
+}
+
+.orgbox-baseshop .product-gallery-segment.is-active,
+.orgbox-baseshop .product-gallery-segment:hover,
+.orgbox-baseshop .product-gallery-segment:focus-visible {
+    border-color: var(--theme-primary);
+    background: var(--theme-primary);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--theme-primary) 58%, transparent);
+    outline: 0;
+}
+
 @media (max-width: 980px) {
     .orgbox-baseshop .catalog-section-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
