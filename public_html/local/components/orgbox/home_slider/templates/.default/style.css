@@ -62,6 +62,12 @@
     animation: orgbox-baseshop-slider-progress var(--home-slider-progress-duration, 7s) linear forwards;
 }
 
+.orgbox-baseshop .home-slider-dots button:hover,
+.orgbox-baseshop .home-slider-dots button:focus-visible {
+    background: var(--theme-primary);
+    outline: 0;
+}
+
 .orgbox-baseshop .home-slider:hover .home-slider-dots button.is-active::after,
 .orgbox-baseshop .home-slider:focus-within .home-slider-dots button.is-active::after {
     animation-play-state: paused;
