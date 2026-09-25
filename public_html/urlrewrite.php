@@ -1,5 +1,6 @@
 <?php
 
+// orgBox: BaseShop catalog routing.
 $arUrlRewrite = [
     [
         'CONDITION' => '#^/catalog/#',
