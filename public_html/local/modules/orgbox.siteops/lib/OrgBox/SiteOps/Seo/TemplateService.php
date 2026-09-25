@@ -24,10 +24,7 @@ final class TemplateService
     public function getProductTemplates(): array
     {
         $iblock = $this->getProductIblock();
-        $templates = \CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES');
-        if (!is_array($templates)) {
-            $templates = [];
-        }
+        $templates = $this->normalizeTemplates(\CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES'));
 
         return array_intersect_key($templates, array_flip(self::TEMPLATE_KEYS));
     }
@@ -35,10 +32,7 @@ final class TemplateService
     public function updateProductTemplates(array $templates): array
     {
         $iblock = $this->getProductIblock();
-        $current = \CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES');
-        if (!is_array($current)) {
-            $current = [];
-        }
+        $current = $this->normalizeTemplates(\CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES'));
         foreach ($templates as $key => $value) {
             if (!in_array($key, self::TEMPLATE_KEYS, true) || !is_string($value)) {
                 throw new RuntimeException('Недопустимое SEO-поле.');
@@ -81,5 +75,18 @@ final class TemplateService
         }
 
         return $iblock;
+    }
+
+    private function normalizeTemplates(mixed $templates): array
+    {
+        if (is_array($templates)) {
+            return $templates;
+        }
+        if (is_string($templates) && $templates !== '') {
+            $unserialized = @unserialize($templates, ['allowed_classes' => false]);
+            return is_array($unserialized) ? $unserialized : [];
+        }
+
+        return [];
     }
 }
