@@ -23,6 +23,7 @@ final class orgbox_siteops extends CModule
     public function DoInstall(): void
     {
         ModuleManager::registerModule($this->MODULE_ID);
+        CopyDirFiles(__DIR__ . '/admin', $_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin', true, true);
         Option::add($this->MODULE_ID, 'api_enabled', 'N');
         Option::add($this->MODULE_ID, 'api_key_id', 'siteops');
         Option::add($this->MODULE_ID, 'api_secret', '');
@@ -30,6 +31,7 @@ final class orgbox_siteops extends CModule
 
     public function DoUninstall(): void
     {
+        DeleteDirFiles(__DIR__ . '/admin', $_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin');
         Option::delete($this->MODULE_ID);
         ModuleManager::unRegisterModule($this->MODULE_ID);
     }
