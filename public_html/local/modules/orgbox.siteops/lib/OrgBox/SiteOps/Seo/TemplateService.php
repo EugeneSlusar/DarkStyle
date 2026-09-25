@@ -24,7 +24,10 @@ final class TemplateService
     public function getProductTemplates(): array
     {
         $iblock = $this->getProductIblock();
-        $templates = (array) ($iblock['IPROPERTY_TEMPLATES'] ?? []);
+        $templates = \CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES');
+        if (!is_array($templates)) {
+            $templates = [];
+        }
 
         return array_intersect_key($templates, array_flip(self::TEMPLATE_KEYS));
     }
@@ -32,7 +35,10 @@ final class TemplateService
     public function updateProductTemplates(array $templates): array
     {
         $iblock = $this->getProductIblock();
-        $current = (array) ($iblock['IPROPERTY_TEMPLATES'] ?? []);
+        $current = \CIBlock::GetArrayByID((int) $iblock['ID'], 'IPROPERTY_TEMPLATES');
+        if (!is_array($current)) {
+            $current = [];
+        }
         foreach ($templates as $key => $value) {
             if (!in_array($key, self::TEMPLATE_KEYS, true) || !is_string($value)) {
                 throw new RuntimeException('Недопустимое SEO-поле.');
@@ -47,6 +53,7 @@ final class TemplateService
         if (!$updater->Update((int) $iblock['ID'], ['IPROPERTY_TEMPLATES' => $current])) {
             throw new RuntimeException('Не удалось сохранить SEO-шаблоны: ' . $updater->LAST_ERROR);
         }
+        \CIBlock::clearIblockTagCache((int) $iblock['ID']);
 
         return $this->getProductTemplates();
     }
