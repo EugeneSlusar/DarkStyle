@@ -41,7 +41,7 @@ final class OrderDataValidator
         if (!preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
             throw new InvalidArgumentException('Укажите корректный почтовый индекс.');
         }
-        if (!in_array($data['delivery_provider'], ['cdek', 'russian_post'], true)) {
+        if (!in_array($data['delivery_provider'], ['cdek', 'russian_post', 'other'], true)) {
             throw new InvalidArgumentException('Выберите способ доставки.');
         }
 

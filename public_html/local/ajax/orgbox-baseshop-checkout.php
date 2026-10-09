@@ -15,6 +15,7 @@ use OrgBox\BaseShop\Config;
 use OrgBox\BaseShop\Delivery\CdekDeliveryProvider;
 use OrgBox\BaseShop\Delivery\DeliveryManager;
 use OrgBox\BaseShop\Delivery\RussianPostDeliveryProvider;
+use OrgBox\BaseShop\Delivery\OtherDeliveryProvider;
 use OrgBox\BaseShop\Notification\EmailOrderNotifier;
 use OrgBox\BaseShop\Order\IblockOrderRepository;
 use OrgBox\BaseShop\Order\OrderDataValidator;
@@ -44,7 +45,12 @@ try {
     $service = new OrderService(
         new ProductRepository(Config::getIblockId('products')),
         new IblockOrderRepository(Config::getIblockId('orders')),
-        new DeliveryManager(new CdekDeliveryProvider(), new RussianPostDeliveryProvider()),
+        new DeliveryManager(new CdekDeliveryProvider(
+            (string) Config::get('cdek_client_id', ''),
+            (string) Config::get('cdek_client_secret', ''),
+            (int) Config::get('cdek_origin_code', 0),
+            (bool) Config::get('cdek_sandbox', false)
+        ), new RussianPostDeliveryProvider(), new OtherDeliveryProvider()),
         new EmailOrderNotifier((string) Config::get('manager_email', '')),
         new OrderDataValidator()
     );
@@ -60,7 +66,8 @@ try {
             (int) $request->getPost('product_id'),
             min(10, max(1, (int) $request->getPost('quantity'))),
             $city,
-            $postalCode
+            $postalCode,
+            (string) $request->getPost('delivery_provider')
         );
         $respond(['success' => true, 'options' => $options]);
     }

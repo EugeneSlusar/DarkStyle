@@ -21,12 +21,12 @@ final class OrderService
     ) {
     }
 
-    public function deliveryOptions(int $productId, int $quantity, string $city, string $postalCode): array
+    public function deliveryOptions(int $productId, int $quantity, string $city, string $postalCode, string $provider): array
     {
         $product = $this->requireProduct($productId);
         $request = $this->deliveryRequest($product, $quantity, $city, $postalCode);
 
-        return array_map(static fn ($result): array => $result->toArray(), $this->delivery->calculateAll($request));
+        return array_map(static fn ($result): array => $result->toArray(), [$this->delivery->calculate($provider, $request)]);
     }
 
     public function place(array $input): array
@@ -37,6 +37,11 @@ final class OrderService
         $delivery = $this->delivery->calculate($data['delivery_provider'], $request);
         if (!$delivery->success) {
             throw new InvalidArgumentException($delivery->error ?: 'Не удалось рассчитать доставку.');
+        }
+
+        if (!isset($input['delivery_quote']) || !is_numeric($input['delivery_quote'])
+            || abs((float) $input['delivery_quote'] - $delivery->price) > 0.005) {
+            throw new InvalidArgumentException('Стоимость доставки изменилась. Рассчитайте доставку повторно.');
         }
 
         $price = (float) $product['PRICE'];
@@ -83,10 +88,10 @@ final class OrderService
         return new DeliveryRequest(
             trim($city),
             trim($postalCode),
-            max(100, (float) $product['WEIGHT']) * max(1, $quantity),
-            max(10, (float) $product['LENGTH']),
-            max(10, (float) $product['WIDTH']),
-            max(2, (float) $product['HEIGHT'] * max(1, $quantity)),
+            (float) $product['WEIGHT'] * max(1, $quantity),
+            (float) $product['LENGTH'],
+            (float) $product['WIDTH'],
+            (float) $product['HEIGHT'] * max(1, $quantity),
             (float) $product['PRICE'] * max(1, $quantity)
         );
     }

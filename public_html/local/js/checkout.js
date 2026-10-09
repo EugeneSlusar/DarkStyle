@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     const message=form.querySelector('.checkout-message');
     const summary=form.querySelector('.checkout-summary');
     const calculate=form.querySelector('.checkout-calculate');
+    const quote=form.querySelector('[name="delivery_quote"]');
+    let revision=0;
+    const invalidate=()=>{revision++;quote.value='';submit.disabled=true;summary.textContent='Рассчитайте доставку для выбранного способа и адреса.';};
+    form.addEventListener('input',event=>{
+      if(event.target.matches('[name="city"], [name="postal_code"], [name="address"], [name="quantity"]'))invalidate();
+    });
 
     const request=async action=>{
       const sessionResponse=await fetch(`${endpoint}?action=session&_=${Date.now()}`,{credentials:'same-origin',cache:'no-store'});
@@ -21,24 +27,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
 
     calculate.addEventListener('click',async()=>{
-      message.textContent='';submit.disabled=true;calculate.disabled=true;calculate.textContent='РАССЧИТЫВАЕМ…';
+      invalidate();
+      const currentRevision=revision;
+      message.textContent='';calculate.disabled=true;calculate.textContent='РАССЧИТЫВАЕМ…';
       try{
         const payload=await request('delivery');
-        const available=payload.options.filter(option=>option.success);
-        if(!available.length)throw new Error('Нет доступных способов доставки.');
-        options.innerHTML=available.map((option,index)=>`<label class="delivery-option"><input type="radio" name="delivery_provider" value="${option.provider}" ${index===0?'checked':''}><span><b>${option.service}</b><small>${option.estimatedDays} · ${option.description}</small></span><strong>${money(option.price)}</strong></label>`).join('');
+        if(currentRevision!==revision)return;
+        const selected=payload.options[0];
+        if(!selected||!selected.success)throw new Error(selected?.error||'Нет доступного тарифа доставки.');
+        quote.value=String(selected.price);
         submit.disabled=false;
-        const selected=available[0];summary.textContent=`Товар и доставка: стоимость будет повторно проверена при отправке заказа. Доставка ${money(selected.price)}.`;
-      }catch(error){message.textContent=error.message;options.innerHTML='<p>Расчёт не выполнен.</p>';}
+        const productTotal=Number(form.dataset.productPrice)*Number(form.elements.quantity.value);
+        summary.textContent=`Товары: ${money(productTotal)}. Доставка: ${money(selected.price)} (${selected.estimatedDays}). Итого: ${money(productTotal+Number(selected.price))}.`;
+      }catch(error){if(currentRevision===revision)message.textContent=error.message;}
       finally{calculate.disabled=false;calculate.textContent='ПЕРЕСЧИТАТЬ ДОСТАВКУ';}
     });
 
     options.addEventListener('change',event=>{
-      if(event.target.matches('[name="delivery_provider"]'))summary.textContent='Товар, доставка и итог будут повторно рассчитаны на сервере.';
+      if(event.target.matches('[name="delivery_provider"]')){invalidate();message.textContent='';}
     });
 
     form.addEventListener('submit',async event=>{
-      event.preventDefault();message.textContent='';submit.disabled=true;submit.textContent='ОФОРМЛЯЕМ…';
+      event.preventDefault();if(!quote.value){message.textContent='Сначала рассчитайте доставку.';return;}message.textContent='';submit.disabled=true;submit.textContent='ОФОРМЛЯЕМ…';
       try{
         const payload=await request('order');
         const panel=form.closest('.checkout-panel');
@@ -47,7 +57,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         success.querySelector('strong').textContent=payload.orderId;
         success.hidden=false;
         success.scrollIntoView({behavior:'smooth',block:'center'});
-      }catch(error){message.textContent=error.message;submit.disabled=false;submit.textContent='ОФОРМИТЬ ЗАКАЗ';}
+      }catch(error){message.textContent=error.message;invalidate();submit.textContent='ОФОРМИТЬ ЗАКАЗ';}
     });
   });
 });

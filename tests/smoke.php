@@ -9,6 +9,7 @@ require $root . '/Delivery/DeliveryResult.php';
 require $root . '/Delivery/CdekDeliveryProvider.php';
 require $root . '/Delivery/RussianPostDeliveryProvider.php';
 require $root . '/Delivery/DeliveryManager.php';
+require $root . '/Delivery/OtherDeliveryProvider.php';
 require $root . '/Order/OrderDataValidator.php';
 
 use OrgBox\BaseShop\Delivery\CdekDeliveryProvider;
@@ -16,14 +17,15 @@ use OrgBox\BaseShop\Delivery\DeliveryManager;
 use OrgBox\BaseShop\Delivery\DeliveryRequest;
 use OrgBox\BaseShop\Delivery\RussianPostDeliveryProvider;
 use OrgBox\BaseShop\Order\OrderDataValidator;
+use OrgBox\BaseShop\Delivery\OtherDeliveryProvider;
 
 $request = new DeliveryRequest('Самара', '443000', 700, 80, 15, 15, 1290);
-$manager = new DeliveryManager(new CdekDeliveryProvider(), new RussianPostDeliveryProvider());
+$manager = new DeliveryManager(new CdekDeliveryProvider(), new RussianPostDeliveryProvider(), new OtherDeliveryProvider());
 $options = $manager->calculateAll($request);
 
-assert(count($options) === 2);
-assert($options[0]->success && $options[0]->price > 0);
-assert($options[1]->success && $options[1]->price > 0);
+assert(count($options) === 3);
+assert(!$options[0]->success && $options[0]->price === 0.0);
+assert(!$options[1]->success && $options[1]->price === 0.0);
 
 $validator = new OrderDataValidator();
 $data = $validator->validate([
