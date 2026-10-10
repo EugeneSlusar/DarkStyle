@@ -105,8 +105,8 @@ final class ShopSettings
         global $APPLICATION;
         $APPLICATION->SetAdditionalCSS('/local/admin/orgbox.css');
         $globalMenu['global_menu_orgbox'] = [
-            'menu_id' => 'orgbox', 'sort' => 1000000, 'text' => 'Оргбокс',
-            'title' => 'Настройки магазина Оргбокс',
+            'menu_id' => 'orgbox', 'sort' => 1000000, 'text' => 'orgBox',
+            'title' => 'Настройки магазина orgBox',
             'url' => '/local/admin/orgbox_baseshop_settings.php?section=general&lang=' . LANGUAGE_ID,
             'items_id' => 'global_menu_orgbox', 'items' => [],
         ];

@@ -57,7 +57,7 @@ namespace {
     };
     $global = ['existing' => ['sort' => 100]]; $menu = [];
     ShopSettings::menu($global, $menu);
-    check(isset($global['existing']) && $global['global_menu_orgbox']['text'] === 'Оргбокс' && $global['global_menu_orgbox']['sort'] > 100, 'Separate root must be last and preserve existing menu');
+    check(isset($global['existing']) && $global['global_menu_orgbox']['text'] === 'orgBox' && $global['global_menu_orgbox']['sort'] > 100, 'Separate root must be last and preserve existing menu');
     check(array_column($menu, 'text') === ['Настройки', 'Настройки доставки'], 'Wrong children');
     $USER->admin = false; $noGlobal = []; $noMenu = [];
     ShopSettings::menu($noGlobal, $noMenu);
