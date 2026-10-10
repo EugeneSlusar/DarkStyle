@@ -34,7 +34,7 @@ final class OrderService
         return $this->delivery->pickupPoints($provider, $city);
     }
 
-    public function place(array $input): array
+    public function place(array $input, string $status = 'NEW', bool $notify = true): array
     {
         $data = $this->validator->validate($input);
         $product = $this->requireProduct($data['product_id']);
@@ -69,12 +69,13 @@ final class OrderService
             'comment' => $data['comment'],
             'total' => $total,
             'created_at' => date('c'),
-            'status' => 'NEW',
+            'status' => $status,
+            'payment_status' => $status,
         ];
 
         $orderId = $this->orders->save($order);
         $order['order_id'] = $orderId;
-        $order['notification_sent'] = $this->notifier->notify($order);
+        $order['notification_sent'] = $notify && $this->notifier->notify($order) ? 'Y' : 'N';
 
         return $order;
     }

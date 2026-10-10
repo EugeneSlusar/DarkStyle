@@ -17,4 +17,14 @@ return [
     'russian_post_origin_postal_code' => '445027', // Индекс отправления; можно изменить для другого отделения.
     'russian_post_token' => '', // Зарезервировано для будущего API Отправка, калькулятор не использует.
     'russian_post_key' => '',
+    // Online payment: choose yookassa or robokassa. Secrets may also be set through ORGBOX_BASESHOP_* environment variables.
+    'payment_provider' => 'yookassa',
+    'payment_return_url' => 'https://example.test/payment/',
+    'yookassa_shop_id' => '',
+    'yookassa_secret_key' => '',
+    'yookassa_test_mode' => true,
+    'robokassa_merchant_login' => '',
+    'robokassa_password1' => '',
+    'robokassa_password2' => '',
+    'robokassa_test_mode' => true,
 ];

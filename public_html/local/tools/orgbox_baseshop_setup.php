@@ -197,6 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
             ['POSTAL_CODE', 'Индекс', 'S'], ['ADDRESS', 'Адрес', 'S'], ['DELIVERY_PROVIDER', 'Провайдер доставки', 'S'],
             ['DELIVERY_SERVICE', 'Услуга доставки', 'S'], ['DELIVERY_PRICE', 'Цена доставки', 'N'], ['COMMENT', 'Комментарий', 'S'],
             ['TOTAL', 'Итого', 'N'], ['CREATED_AT', 'Создан', 'S'], ['STATUS', 'Статус', 'S'],
+            ['PAYMENT_PROVIDER', 'Платёжный провайдер', 'S'], ['PAYMENT_ID', 'ID платежа', 'S'],
+            ['PAYMENT_STATUS', 'Статус оплаты', 'S'], ['PAID_AT', 'Оплачен', 'S'], ['NOTIFICATION_SENT', 'Уведомление отправлено', 'S'], ['CUSTOMER_NOTIFICATION_SENT', 'Подтверждение клиенту отправлено', 'S'],
         ];
         foreach ($orderProperties as [$code, $name, $type]) {
             $ensureProperty($ordersId, $code, $name, $type);
@@ -228,6 +230,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_bitrix_sessid()) {
                 'SUBJECT' => 'Новый заказ №#ORDER_ID#: #PRODUCT_NAME#',
                 'BODY_TYPE' => 'text',
                 'MESSAGE' => "Заказ №#ORDER_ID#\n\nТовар: #PRODUCT_NAME#\nКоличество: #QUANTITY#\nИтого: #TOTAL# руб.\n\nПолучатель: #CUSTOMER_NAME#\nТелефон: #PHONE#\nEmail: #EMAIL#\nАдрес: #POSTAL_CODE#, #CITY#, #ADDRESS#\nДоставка: #DELIVERY_SERVICE# (#DELIVERY_PRICE# руб.)\n\nКомментарий: #COMMENT#",
+            ]);
+        }
+        if (!\CEventType::GetList(['TYPE_ID' => 'ORGBOX_BASESHOP_PAID_ORDER', 'LID' => LANGUAGE_ID])->Fetch()) {
+            $eventType = new \CEventType();
+            $eventType->Add([
+                'LID' => LANGUAGE_ID,
+                'EVENT_NAME' => 'ORGBOX_BASESHOP_PAID_ORDER',
+                'NAME' => 'Оплата заказа подтверждена',
+                'DESCRIPTION' => "#ORDER_ID# - номер заказа\n#PRODUCT_NAME# - товар\n#TOTAL# - итог\n#CUSTOMER_NAME# - получатель",
+            ]);
+        }
+        if (!\CEventMessage::GetList($by = 'id', $order = 'desc', ['TYPE_ID' => 'ORGBOX_BASESHOP_PAID_ORDER'])->Fetch()) {
+            $eventMessage = new \CEventMessage();
+            $eventMessage->Add([
+                'ACTIVE' => 'Y',
+                'EVENT_NAME' => 'ORGBOX_BASESHOP_PAID_ORDER',
+                'LID' => [SITE_ID],
+                'EMAIL_FROM' => '#DEFAULT_EMAIL_FROM#',
+                'EMAIL_TO' => '#EMAIL_TO#',
+                'SUBJECT' => 'Оплата заказа №#ORDER_ID# подтверждена',
+                'BODY_TYPE' => 'text',
+                'MESSAGE' => "Спасибо за заказ №#ORDER_ID#!\n\nОплата подтверждена.\nТовар: #PRODUCT_NAME#\nКоличество: #QUANTITY#\nИтого: #TOTAL# руб.\n\nДоставка: #DELIVERY_SERVICE#\nАдрес: #POSTAL_CODE#, #CITY#, #ADDRESS#",
             ]);
         }
 

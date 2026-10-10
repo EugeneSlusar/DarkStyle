@@ -22,6 +22,15 @@ $defaults = [
     'russian_post_token' => '', // Зарезервировано для будущего API Отправка, калькулятор не использует.
     'russian_post_key' => '',
     'delivery_fallback_enabled' => true,
+    'payment_provider' => 'yookassa',
+    'payment_return_url' => '',
+    'yookassa_shop_id' => '',
+    'yookassa_secret_key' => '',
+    'yookassa_test_mode' => false,
+    'robokassa_merchant_login' => '',
+    'robokassa_password1' => '',
+    'robokassa_password2' => '',
+    'robokassa_test_mode' => false,
 ];
 
 $localFile = __DIR__ . '/config.local.php';
