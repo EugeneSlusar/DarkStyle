@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bitrix\Main\Config {
     final class Option {
-        public static string $value = '';
-        public static function get(string $module, string $key, string $default): string { return self::$value; }
+        public static ?string $value = null;
+        public static function get(string $module, string $key, string $default): string { return self::$value ?? $default; }
     }
 }
 namespace {

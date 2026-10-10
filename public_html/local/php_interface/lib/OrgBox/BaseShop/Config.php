@@ -20,8 +20,8 @@ final class Config
             return self::cast($environmentValue, $default);
         }
 
-        $option = Option::get(self::MODULE_ID, $key, '');
-        if ($option !== '') {
+        $option = Option::get(self::MODULE_ID, $key, '__ORGBOX_UNSET__');
+        if ($option !== '__ORGBOX_UNSET__') {
             return self::cast($option, $default);
         }
 
