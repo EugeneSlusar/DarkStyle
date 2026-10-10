@@ -79,20 +79,20 @@ jobs:
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "cd '${DEPLOY_PATH}' && \
-             include_backup=\$(mktemp -d) && \
-             trap 'rm -rf -- \"\$include_backup\"' EXIT && \
-             if [[ -d public_html/include/orgbox_baseshop ]]; then \
-               mkdir -p \"\$include_backup/orgbox_baseshop\" && \
-               cp -a public_html/include/orgbox_baseshop/. \"\$include_backup/orgbox_baseshop/\"; \
-             fi && \
-             sync_status=0; \
-             bash .deploy/sync_repo_from_git.sh --auto || sync_status=\$?; \
-             if [[ -d \"\$include_backup/orgbox_baseshop\" ]]; then \
-               mkdir -p public_html/include/orgbox_baseshop && \
-               cp -a \"\$include_backup/orgbox_baseshop/.\" public_html/include/orgbox_baseshop/; \
-             fi; \
-             exit \$sync_status"
+            "bash -s -- '${DEPLOY_PATH}'" <<'REMOTE_SCRIPT'
+          set -euo pipefail
+          cd -- "$1"
+
+          script_version="$(sed -n 's/^SCRIPT_VERSION="\([^"]*\)"$/\1/p' .deploy/sync_repo_from_git.sh | head -n 1)"
+          minimum_version="1.3.8"
+          if [[ ! "$script_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] \
+            || [[ "$(printf '%s\n' "$minimum_version" "$script_version" | LC_ALL=C sort -V | head -n 1)" != "$minimum_version" ]]; then
+            echo "Update .deploy/sync_repo_from_git.sh to $minimum_version or newer before automatic deployment." >&2
+            exit 1
+          fi
+
+          SYNC_REPO_AUTO_UPDATE=0 bash .deploy/sync_repo_from_git.sh --auto
+          REMOTE_SCRIPT
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
