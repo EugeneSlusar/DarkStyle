@@ -50,7 +50,9 @@ try {
             (string) Config::get('cdek_client_secret', ''),
             (int) Config::get('cdek_origin_code', 0),
             (bool) Config::get('cdek_sandbox', false)
-        ), new RussianPostDeliveryProvider(), new YandexDeliveryProvider(
+        ), new RussianPostDeliveryProvider(
+            (string) Config::get('russian_post_origin_postal_code', '')
+        ), new YandexDeliveryProvider(
             (string) Config::get('yandex_token', ''),
             (string) Config::get('yandex_origin_station_id', ''),
             (bool) Config::get('yandex_sandbox', false)
