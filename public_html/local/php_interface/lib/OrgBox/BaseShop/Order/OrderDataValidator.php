@@ -36,21 +36,21 @@ final class OrderDataValidator
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Укажите корректный email.');
         }
-        if ($data['city'] === '' || ($data['delivery_provider'] !== 'yandex' && $data['address'] === '')) {
+        if ($data['city'] === '' || (!in_array($data['delivery_provider'], ['yandex', 'cdek_pickup'], true) && $data['address'] === '')) {
             throw new InvalidArgumentException('Укажите город и адрес доставки.');
         }
-        if ($data['delivery_provider'] !== 'yandex' && !preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
+        if (!in_array($data['delivery_provider'], ['yandex', 'cdek_pickup'], true) && !preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
             throw new InvalidArgumentException('Укажите корректный почтовый индекс.');
         }
         if ($data['delivery_provider'] === 'russian_post' && !preg_match('/^[1-9][0-9]{5}$/D', $data['postal_code'])) {
             throw new InvalidArgumentException('Укажите шестизначный почтовый индекс получателя.');
         }
-        if (!in_array($data['delivery_provider'], ['cdek', 'russian_post', 'yandex'], true)) {
+        if (!in_array($data['delivery_provider'], ['cdek', 'cdek_pickup', 'russian_post', 'yandex'], true)) {
             throw new InvalidArgumentException('Выберите способ доставки.');
         }
 
-        if ($data['delivery_provider'] === 'yandex' && $data['pickup_point_id'] === '') {
-            throw new InvalidArgumentException('Выберите ПВЗ Яндекс Доставки.');
+        if (in_array($data['delivery_provider'], ['yandex', 'cdek_pickup'], true) && $data['pickup_point_id'] === '') {
+            throw new InvalidArgumentException($data['delivery_provider'] === 'yandex' ? 'Выберите ПВЗ Яндекс Доставки.' : 'Выберите ПВЗ СДЭК.');
         }
 
         return $data;
