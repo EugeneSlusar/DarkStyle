@@ -42,6 +42,9 @@ final class OrderDataValidator
         if ($data['delivery_provider'] !== 'yandex' && !preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
             throw new InvalidArgumentException('Укажите корректный почтовый индекс.');
         }
+        if ($data['delivery_provider'] === 'russian_post' && !preg_match('/^[1-9][0-9]{5}$/D', $data['postal_code'])) {
+            throw new InvalidArgumentException('Укажите шестизначный почтовый индекс получателя.');
+        }
         if (!in_array($data['delivery_provider'], ['cdek', 'russian_post', 'yandex'], true)) {
             throw new InvalidArgumentException('Выберите способ доставки.');
         }

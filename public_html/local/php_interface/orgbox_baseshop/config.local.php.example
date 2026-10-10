@@ -14,6 +14,7 @@ return [
     'yandex_token' => '',
     'yandex_origin_station_id' => '', // ID склада отправки в Яндекс Доставке.
     'yandex_sandbox' => false,
-    'russian_post_token' => '',
+    'russian_post_origin_postal_code' => '445027', // Индекс отправления; можно изменить для другого отделения.
+    'russian_post_token' => '', // Зарезервировано для будущего API Отправка, калькулятор не использует.
     'russian_post_key' => '',
 ];

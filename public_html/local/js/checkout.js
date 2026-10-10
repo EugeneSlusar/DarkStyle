@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const loadPoints=form.querySelector('.checkout-load-points');
     const pointSelect=form.querySelector('[name="pickup_point_id"]');
     const pointDetails=form.querySelector('.checkout-point-details');
+    const postNote=form.querySelector('.checkout-post-note');
     const provider=()=>form.querySelector('[name="delivery_provider"]:checked')?.value||'cdek';
     let revision=0,pointsRevision=0,points=[];
     let submitting=false;
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const updateProvider=()=>{
       if(!pickup)return;
       const isPickup=provider()==='yandex';
+      if(postNote)postNote.hidden=provider()!=='russian_post';
       pickup.hidden=!isPickup;
       form.querySelector('.checkout-address').hidden=isPickup;
       form.querySelector('.checkout-postal-code').hidden=isPickup;

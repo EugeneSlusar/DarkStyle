@@ -102,7 +102,7 @@ final class Config
     private static function values(): array
     {
         if (self::$values === null) {
-            $file = dirname(__DIR__, 2) . '/orgbox_baseshop/config.php';
+            $file = dirname(__DIR__, 3) . '/orgbox_baseshop/config.php';
             self::$values = is_file($file) ? (array) require $file : [];
         }
 

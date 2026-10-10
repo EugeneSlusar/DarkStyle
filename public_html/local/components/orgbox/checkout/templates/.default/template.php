@@ -34,7 +34,7 @@ $image = $product['IMAGE'] ?: '/local/assets/product-placeholder.svg';
             <fieldset><legend>02 / Адрес</legend><div class="checkout-fields"><label>ГОРОД *<input name="city" type="text" maxlength="100" required autocomplete="address-level2"></label><label class="checkout-postal-code">ИНДЕКС *<input name="postal_code" type="text" maxlength="6" inputmode="numeric" required autocomplete="postal-code"></label><label class="checkout-wide checkout-address">АДРЕС *<input name="address" type="text" maxlength="250" required autocomplete="street-address"></label></div><button class="checkout-calculate" type="button">РАССЧИТАТЬ ДОСТАВКУ</button></fieldset>
             <fieldset><legend>03 / Доставка</legend><div class="delivery-options">
                 <label class="delivery-option"><input type="radio" name="delivery_provider" value="cdek" checked><span><b>СДЭК</b><small>Курьер до двери</small></span></label>
-                <label class="delivery-option"><input type="radio" name="delivery_provider" value="russian_post"><span><b>Почта России</b><small>Расчёт пока не подключён</small></span></label>
+                <label class="delivery-option"><input type="radio" name="delivery_provider" value="russian_post"><span><b>Почта России</b><small>В отделение по индексу · до 10 кг</small></span></label>
                 <label class="delivery-option"><input type="radio" name="delivery_provider" value="yandex"><span><b>Яндекс Доставка</b><small>В пункт выдачи заказов</small></span></label>
             </div>
             <div class="checkout-pickup" hidden>
@@ -42,7 +42,9 @@ $image = $product['IMAGE'] ?: '/local/assets/product-placeholder.svg';
                 <button class="checkout-load-points" type="button">НАЙТИ ПВЗ</button>
                 <label>ПУНКТ ВЫДАЧИ *<select name="pickup_point_id" disabled><option value="">Сначала найдите ПВЗ</option></select></label>
                 <p class="checkout-point-details" aria-live="polite"></p>
-            </div><input type="hidden" name="delivery_quote" value=""></fieldset>
+            </div>
+            <p class="checkout-post-note" hidden>Получение в отделении по индексу. Базовая посылка: до 10 кг, сторона до 60 см, сумма сторон до 120 см. Без объявленной ценности и наложенного платежа.</p>
+            <input type="hidden" name="delivery_quote" value=""></fieldset>
             <label>КОММЕНТАРИЙ<textarea name="comment" maxlength="1000" rows="3"></textarea></label>
             <div class="checkout-summary"></div>
             <div class="checkout-message" role="status" aria-live="polite"></div>
