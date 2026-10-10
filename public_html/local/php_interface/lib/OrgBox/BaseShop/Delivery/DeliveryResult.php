@@ -13,7 +13,10 @@ final class DeliveryResult
         public readonly string $estimatedDays,
         public readonly string $description,
         public readonly bool $success = true,
-        public readonly string $error = ''
+        public readonly string $error = '',
+        public readonly string $pickupPointId = '',
+        public readonly string $pickupPointAddress = '',
+        public readonly string $pickupPointPostalCode = ''
     ) {
     }
 
@@ -27,6 +30,9 @@ final class DeliveryResult
             'description' => $this->description,
             'success' => $this->success,
             'error' => $this->error,
+            'pickupPointId' => $this->pickupPointId,
+            'pickupPointAddress' => $this->pickupPointAddress,
+            'pickupPointPostalCode' => $this->pickupPointPostalCode,
         ];
     }
 }

@@ -40,4 +40,14 @@ final class DeliveryManager
 
         return $this->providers[$providerCode]->calculate($request);
     }
+
+    public function pickupPoints(string $providerCode, string $city): array
+    {
+        $provider = $this->providers[$providerCode] ?? null;
+        if (!$provider instanceof PickupPointProviderInterface) {
+            throw new InvalidArgumentException('Выбор ПВЗ для этой службы пока недоступен.');
+        }
+
+        return $provider->pickupPoints($city);
+    }
 }

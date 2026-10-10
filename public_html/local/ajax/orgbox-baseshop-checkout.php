@@ -15,7 +15,7 @@ use OrgBox\BaseShop\Config;
 use OrgBox\BaseShop\Delivery\CdekDeliveryProvider;
 use OrgBox\BaseShop\Delivery\DeliveryManager;
 use OrgBox\BaseShop\Delivery\RussianPostDeliveryProvider;
-use OrgBox\BaseShop\Delivery\OtherDeliveryProvider;
+use OrgBox\BaseShop\Delivery\YandexDeliveryProvider;
 use OrgBox\BaseShop\Notification\EmailOrderNotifier;
 use OrgBox\BaseShop\Order\IblockOrderRepository;
 use OrgBox\BaseShop\Order\OrderDataValidator;
@@ -50,16 +50,27 @@ try {
             (string) Config::get('cdek_client_secret', ''),
             (int) Config::get('cdek_origin_code', 0),
             (bool) Config::get('cdek_sandbox', false)
-        ), new RussianPostDeliveryProvider(), new OtherDeliveryProvider()),
+        ), new RussianPostDeliveryProvider(), new YandexDeliveryProvider(
+            (string) Config::get('yandex_token', ''),
+            (string) Config::get('yandex_origin_station_id', ''),
+            (bool) Config::get('yandex_sandbox', false)
+        )),
         new EmailOrderNotifier((string) Config::get('manager_email', '')),
         new OrderDataValidator()
     );
 
     $action = (string) $request->getPost('action');
+    if ($action === 'pickup_points') {
+        $city = mb_substr(trim(strip_tags((string) $request->getPost('city'))), 0, 100);
+        $respond(['success' => true, 'points' => $service->pickupPoints(
+            (string) $request->getPost('delivery_provider'), $city
+        )]);
+    }
+
     if ($action === 'delivery') {
         $city = mb_substr(trim(strip_tags((string) $request->getPost('city'))), 0, 100);
         $postalCode = trim((string) $request->getPost('postal_code'));
-        if ($city === '' || !preg_match('/^[0-9]{5,6}$/', $postalCode)) {
+        if ($city === '' || ((string) $request->getPost('delivery_provider') !== 'yandex' && !preg_match('/^[0-9]{5,6}$/', $postalCode))) {
             throw new InvalidArgumentException('Укажите город и корректный почтовый индекс.');
         }
         $options = $service->deliveryOptions(
@@ -67,7 +78,8 @@ try {
             min(10, max(1, (int) $request->getPost('quantity'))),
             $city,
             $postalCode,
-            (string) $request->getPost('delivery_provider')
+            (string) $request->getPost('delivery_provider'),
+            mb_substr(trim((string) $request->getPost('pickup_point_id')), 0, 100)
         );
         $respond(['success' => true, 'options' => $options]);
     }
