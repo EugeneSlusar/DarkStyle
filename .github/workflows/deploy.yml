@@ -40,30 +40,11 @@ jobs:
         run: |
           set -euo pipefail
           install -d -m 700 "$HOME/.ssh"
-
-          key_value="${DEPLOY_SSH_KEY//$'\r'/}"
-          if [[ "$key_value" != *$'\n'* && "$key_value" == *'\n'* ]]; then
-            key_value="${key_value//\\n/$'\n'}"
-          fi
-
-          key_value="$(printf '%s\n' "$key_value" | sed \
-            '/^----- BEGIN DEPLOY_SSH_KEY -----$/d; /^----- END DEPLOY_SSH_KEY -----$/d')"
-
-          if [[ "$key_value" == *"PRIVATE KEY-----"* ]]; then
-            printf '%s\n' "$key_value" > "$HOME/.ssh/deploy_key"
-          elif ! printf '%s' "$key_value" | base64 --decode > "$HOME/.ssh/deploy_key"; then
-            echo "DEPLOY_SSH_KEY must contain an OpenSSH/PEM private key or its Base64 representation" >&2
-            exit 1
-          fi
-
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' | sed \
+            '/^----- BEGIN DEPLOY_SSH_KEY -----$/d; /^----- END DEPLOY_SSH_KEY -----$/d' \
+            > "$HOME/.ssh/deploy_key"
           chmod 600 "$HOME/.ssh/deploy_key"
-          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
-
-          known_hosts_value="${DEPLOY_KNOWN_HOSTS//$'\r'/}"
-          if [[ "$known_hosts_value" != *$'\n'* && "$known_hosts_value" == *'\n'* ]]; then
-            known_hosts_value="${known_hosts_value//\\n/$'\n'}"
-          fi
-          printf '%s\n' "$known_hosts_value" > "$HOME/.ssh/known_hosts"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 644 "$HOME/.ssh/known_hosts"
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
@@ -79,20 +60,7 @@ jobs:
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "bash -s -- '${DEPLOY_PATH}'" <<'REMOTE_SCRIPT'
-          set -euo pipefail
-          cd -- "$1"
-
-          script_version="$(sed -n 's/^SCRIPT_VERSION="\([^"]*\)"$/\1/p' .deploy/sync_repo_from_git.sh | head -n 1)"
-          minimum_version="1.3.8"
-          if [[ ! "$script_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] \
-            || [[ "$(printf '%s\n' "$minimum_version" "$script_version" | LC_ALL=C sort -V | head -n 1)" != "$minimum_version" ]]; then
-            echo "Update .deploy/sync_repo_from_git.sh to $minimum_version or newer before automatic deployment." >&2
-            exit 1
-          fi
-
-          SYNC_REPO_AUTO_UPDATE=0 bash .deploy/sync_repo_from_git.sh --auto
-          REMOTE_SCRIPT
+            "cd '${DEPLOY_PATH}' && bash .deploy/sync_repo_from_git.sh --auto"
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
