@@ -33,6 +33,17 @@ final class ShopSettings
             'Почта России' => [
                 'russian_post_origin_postal_code' => ['Индекс отделения отправления', 'postcode', '445027'],
             ],
+            'Онлайн-оплата' => [
+                'payment_provider' => ['Основной провайдер', 'payment_provider', 'yookassa'],
+                'payment_return_url' => ['URL возврата после оплаты', 'url', ''],
+                'yookassa_shop_id' => ['ЮKassa: shopId', 'text', ''],
+                'yookassa_secret_key' => ['ЮKassa: секретный ключ', 'secret', ''],
+                'yookassa_test_mode' => ['ЮKassa: тестовый режим', 'bool', false],
+                'robokassa_merchant_login' => ['Робокасса: MerchantLogin', 'text', ''],
+                'robokassa_password1' => ['Робокасса: Password #1', 'secret', ''],
+                'robokassa_password2' => ['Робокасса: Password #2', 'secret', ''],
+                'robokassa_test_mode' => ['Робокасса: тестовый режим', 'bool', false],
+            ],
             'Инфоблоки' => [
                 'products_iblock_id' => ['Инфоблок товаров (0 — автоопределение)', 'number', 0],
                 'orders_iblock_id' => ['Инфоблок заказов (0 — автоопределение)', 'number', 0],
@@ -40,10 +51,10 @@ final class ShopSettings
             ],
         ];
         if ($section === 'all') { return $groups; }
-        if (!in_array($section, ['general', 'delivery'], true)) { throw new InvalidArgumentException('Неизвестный раздел настроек.'); }
+        if (!in_array($section, ['general', 'delivery', 'payment'], true)) { throw new InvalidArgumentException('Неизвестный раздел настроек.'); }
         return array_filter($groups, static fn(string $group): bool => $section === 'delivery'
             ? in_array($group, ['СДЭК', 'Яндекс Доставка', 'Почта России'], true)
-            : in_array($group, ['Общие настройки', 'Инфоблоки'], true), ARRAY_FILTER_USE_KEY);
+            : ($section === 'payment' ? $group === 'Онлайн-оплата' : in_array($group, ['Общие настройки', 'Инфоблоки'], true)), ARRAY_FILTER_USE_KEY);
     }
 
     public static function environmentKey(string $key): string
@@ -82,7 +93,11 @@ final class ShopSettings
                 if ($type === 'email' && $value !== '' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     throw new InvalidArgumentException('Укажите корректный email для заказов.');
                 }
+                if ($type === 'url' && $value !== '' && !filter_var($value, FILTER_VALIDATE_URL)) {
+                    throw new InvalidArgumentException('Укажите полный URL возврата после оплаты.');
+                }
                 if ($type === 'theme' && $value !== 'dark') { throw new InvalidArgumentException('Неизвестная тема оформления.'); }
+                if ($type === 'payment_provider' && !in_array($value, ['yookassa', 'robokassa'], true)) { throw new InvalidArgumentException('Неизвестный платёжный провайдер.'); }
                 if (in_array($key, ['site_name', 'origin_city'], true) && $value === '') {
                     throw new InvalidArgumentException('Заполните поле: ' . $label);
                 }
@@ -110,9 +125,9 @@ final class ShopSettings
             'url' => '/local/admin/orgbox_baseshop_settings.php?section=general&lang=' . LANGUAGE_ID,
             'items_id' => 'global_menu_orgbox', 'items' => [],
         ];
-        foreach (['general' => 'Настройки', 'delivery' => 'Настройки доставки'] as $section => $label) {
+        foreach (['general' => 'Настройки', 'delivery' => 'Настройки доставки', 'payment' => 'Настройки оплаты'] as $section => $label) {
             $moduleMenu[] = [
-                'parent_menu' => 'global_menu_orgbox', 'sort' => $section === 'general' ? 10 : 20,
+                'parent_menu' => 'global_menu_orgbox', 'sort' => $section === 'general' ? 10 : ($section === 'delivery' ? 20 : 30),
                 'text' => $label, 'title' => $label,
                 'url' => '/local/admin/orgbox_baseshop_settings.php?section=' . $section . '&lang=' . LANGUAGE_ID,
                 'icon' => 'settings_menu_icon', 'page_icon' => 'settings_page_icon',

@@ -25,6 +25,8 @@ namespace {
         'origin_city' => 'Тольятти', 'theme' => 'dark', 'products_iblock_id' => '0', 'orders_iblock_id' => '10', 'banners_iblock_id' => '0'];
     $delivery = ['cdek_origin_code' => '424', 'cdek_sandbox' => 'Y', 'yandex_origin_station_id' => 'station',
         'russian_post_origin_postal_code' => '445027'];
+    $payment = ['payment_provider' => 'robokassa', 'payment_return_url' => 'https://shop.example/payment/',
+        'yookassa_shop_id' => '123', 'yookassa_test_mode' => 'Y', 'robokassa_merchant_login' => 'shop', 'robokassa_test_mode' => ''];
     Option::$values = ['yandex_token' => 'stored-secret', 'cdek_client_secret' => 'existing-secret'];
     ShopSettings::save($general + ['yandex_token' => 'injected'], 'general');
     check(Option::$values['yandex_token'] === 'stored-secret', 'General page must not change delivery settings');
@@ -35,12 +37,16 @@ namespace {
     check(Option::$values['yandex_token'] === 'replacement-secret', 'Replace secret');
     ShopSettings::save($delivery + ['clear_yandex_token' => 'Y'], 'delivery');
     check(Config::get('yandex_token', 'fallback-secret') === '', 'Explicit clear must override fallback');
+    ShopSettings::save($payment + ['robokassa_password1' => 'first', 'robokassa_password2' => 'second'], 'payment');
+    check(Config::get('payment_provider', '') === 'robokassa' && Config::get('robokassa_test_mode', true) === false, 'Payment settings must persist');
     $before = Option::$values;
     rejects(fn() => ShopSettings::save(array_replace($delivery, ['russian_post_origin_postal_code' => '12345']), 'delivery'));
     check(Option::$values === $before, 'Invalid input must not partially save');
     rejects(fn() => ShopSettings::normalize(array_replace($general, ['manager_email' => 'bad']), 'general'));
     rejects(fn() => ShopSettings::normalize(array_replace($general, ['orders_iblock_id' => '-1']), 'general'));
     rejects(fn() => ShopSettings::normalize(array_replace($general, ['site_name' => ['bad']]), 'general'));
+    rejects(fn() => ShopSettings::normalize(array_replace($payment, ['payment_provider' => 'unknown']), 'payment'));
+    rejects(fn() => ShopSettings::normalize(array_replace($payment, ['payment_return_url' => 'not-a-url']), 'payment'));
     $env = ShopSettings::environmentKey('russian_post_origin_postal_code');
     $previous = getenv($env);
     try {
@@ -58,7 +64,7 @@ namespace {
     $global = ['existing' => ['sort' => 100]]; $menu = [];
     ShopSettings::menu($global, $menu);
     check(isset($global['existing']) && $global['global_menu_orgbox']['text'] === 'orgBox' && $global['global_menu_orgbox']['sort'] > 100, 'Separate root must be last and preserve existing menu');
-    check(array_column($menu, 'text') === ['Настройки', 'Настройки доставки'], 'Wrong children');
+    check(array_column($menu, 'text') === ['Настройки', 'Настройки доставки', 'Настройки оплаты'], 'Wrong children');
     $USER->admin = false; $noGlobal = []; $noMenu = [];
     ShopSettings::menu($noGlobal, $noMenu);
     check($noGlobal === [] && $noMenu === [], 'Only administrators see menu');

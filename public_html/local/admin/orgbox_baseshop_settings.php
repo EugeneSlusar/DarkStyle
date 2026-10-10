@@ -12,8 +12,8 @@ if (!is_object($USER) || !$USER->IsAdmin()) {
     exit;
 }
 // Query string selects the section; POST cannot save fields from another section.
-$section = ($_GET['section'] ?? '') === 'delivery' ? 'delivery' : 'general';
-$APPLICATION->SetTitle($section === 'delivery' ? 'Оргбокс: настройки доставки' : 'Оргбокс: настройки');
+$section = in_array($_GET['section'] ?? '', ['delivery', 'payment'], true) ? (string) $_GET['section'] : 'general';
+$APPLICATION->SetTitle($section === 'delivery' ? 'orgBox: настройки доставки' : ($section === 'payment' ? 'orgBox: настройки оплаты' : 'orgBox: настройки'));
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!check_bitrix_sessid()) {
@@ -57,6 +57,8 @@ elseif (($_GET['saved'] ?? '') === 'Y') { CAdminMessage::ShowMessage(['MESSAGE' 
                 <input id="<?=$key?>" name="<?=$key?>" type="checkbox" value="Y"<?=$display ? ' checked' : ''?><?=$locked ? ' disabled' : ''?>>
             <?php elseif ($type === 'theme'): ?>
                 <select id="<?=$key?>" name="<?=$key?>"<?=$locked ? ' disabled' : ''?>><option value="dark">Тёмная</option></select>
+            <?php elseif ($type === 'payment_provider'): ?>
+                <select id="<?=$key?>" name="<?=$key?>"<?=$locked ? ' disabled' : ''?>><option value="yookassa"<?=$display === 'yookassa' ? ' selected' : ''?>>ЮKassa</option><option value="robokassa"<?=$display === 'robokassa' ? ' selected' : ''?>>Робокасса</option></select>
             <?php else: ?>
                 <input id="<?=$key?>" name="<?=$key?>" type="<?=$type === 'secret' ? 'password' : ($type === 'number' ? 'number' : ($type === 'email' ? 'email' : 'text'))?>" value="<?=htmlspecialcharsbx((string) $display)?>" size="50"<?=$type === 'number' ? ' min="0" max="999999999"' : ''?><?=$type === 'postcode' ? ' maxlength="6" pattern="[1-9][0-9]{5}"' : ''?><?=$type === 'secret' ? ' autocomplete="new-password"' : ''?><?=$locked ? ' disabled' : ''?>>
                 <?php if ($type === 'secret'): ?>

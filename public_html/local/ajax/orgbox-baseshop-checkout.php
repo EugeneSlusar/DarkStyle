@@ -17,9 +17,12 @@ use OrgBox\BaseShop\Delivery\DeliveryManager;
 use OrgBox\BaseShop\Delivery\RussianPostDeliveryProvider;
 use OrgBox\BaseShop\Delivery\YandexDeliveryProvider;
 use OrgBox\BaseShop\Notification\EmailOrderNotifier;
+use OrgBox\BaseShop\Notification\EmailCustomerPaidNotifier;
 use OrgBox\BaseShop\Order\IblockOrderRepository;
 use OrgBox\BaseShop\Order\OrderDataValidator;
 use OrgBox\BaseShop\Order\OrderService;
+use OrgBox\BaseShop\Payment\PaymentService;
+use OrgBox\BaseShop\Payment\PaymentStatus;
 
 header('Content-Type: application/json; charset=UTF-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
@@ -95,9 +98,14 @@ try {
         if (isset($_SESSION['ORGBOX_BASESHOP_LAST_ORDER']) && time() - (int) $_SESSION['ORGBOX_BASESHOP_LAST_ORDER'] < 10) {
             throw new InvalidArgumentException('Заказ уже отправлен. Подождите несколько секунд.');
         }
-        $order = $service->place($request->getPostList()->toArray());
+        $order = $service->place($request->getPostList()->toArray(), PaymentStatus::WAITING, false);
+        $payment = (new PaymentService(
+            new IblockOrderRepository(Config::getIblockId('orders')),
+            new EmailOrderNotifier((string) Config::get('manager_email', '')),
+            new EmailCustomerPaidNotifier()
+        ))->start($order);
         $_SESSION['ORGBOX_BASESHOP_LAST_ORDER'] = time();
-        $respond(['success' => true, 'orderId' => $order['order_id']]);
+        $respond(['success' => true, 'orderId' => $order['order_id'], 'paymentUrl' => $payment['confirmation_url']]);
     }
 
     throw new InvalidArgumentException('Неизвестное действие.');

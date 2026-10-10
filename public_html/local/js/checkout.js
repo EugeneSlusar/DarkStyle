@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const pending=request('order');controls.forEach(control=>{control.disabled=true;});
       try{
         const payload=await pending;
+        if(payload.paymentUrl){window.location.assign(payload.paymentUrl);return;}
         const panel=form.closest('.checkout-panel');
         form.hidden=true;
         const success=panel.querySelector('.checkout-success');
