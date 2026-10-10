@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__) . '/public_html/local/php_interface/lib/OrgBox/BaseShop';
 require $root . '/Delivery/DeliveryProviderInterface.php';
+require $root . '/Delivery/PickupPointProviderInterface.php';
 require $root . '/Delivery/DeliveryRequest.php';
 require $root . '/Delivery/DeliveryResult.php';
 require $root . '/Delivery/CdekDeliveryProvider.php';

@@ -50,6 +50,11 @@ try {
             (string) Config::get('cdek_client_secret', ''),
             (int) Config::get('cdek_origin_code', 0),
             (bool) Config::get('cdek_sandbox', false)
+        ), new CdekDeliveryProvider(
+            (string) Config::get('cdek_client_id', ''),
+            (string) Config::get('cdek_client_secret', ''),
+            (int) Config::get('cdek_origin_code', 0),
+            (bool) Config::get('cdek_sandbox', false), null, true
         ), new RussianPostDeliveryProvider(
             (string) Config::get('russian_post_origin_postal_code', '')
         ), new YandexDeliveryProvider(
@@ -72,7 +77,7 @@ try {
     if ($action === 'delivery') {
         $city = mb_substr(trim(strip_tags((string) $request->getPost('city'))), 0, 100);
         $postalCode = trim((string) $request->getPost('postal_code'));
-        if ($city === '' || ((string) $request->getPost('delivery_provider') !== 'yandex' && !preg_match('/^[0-9]{5,6}$/', $postalCode))) {
+        if ($city === '' || (!in_array((string) $request->getPost('delivery_provider'), ['yandex', 'cdek_pickup'], true) && !preg_match('/^[0-9]{5,6}$/', $postalCode))) {
             throw new InvalidArgumentException('Укажите город и корректный почтовый индекс.');
         }
         $options = $service->deliveryOptions(

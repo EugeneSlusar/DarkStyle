@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const pointDetails=form.querySelector('.checkout-point-details');
     const postNote=form.querySelector('.checkout-post-note');
     const provider=()=>form.querySelector('[name="delivery_provider"]:checked')?.value||'cdek';
+    const isPickup=()=>['yandex','cdek_pickup'].includes(provider());
     let revision=0,pointsRevision=0,points=[];
     let submitting=false;
     const invalidate=()=>{revision++;quote.value='';submit.disabled=true;summary.textContent='Рассчитайте доставку для выбранного способа и адреса.';};
@@ -27,13 +28,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
     const updateProvider=()=>{
       if(!pickup)return;
-      const isPickup=provider()==='yandex';
+      const pickupMode=isPickup();
       if(postNote)postNote.hidden=provider()!=='russian_post';
-      pickup.hidden=!isPickup;
-      form.querySelector('.checkout-address').hidden=isPickup;
-      form.querySelector('.checkout-postal-code').hidden=isPickup;
-      form.querySelector('[name="address"]').disabled=isPickup;
-      form.querySelector('[name="postal_code"]').disabled=isPickup;
+      pickup.hidden=!pickupMode;
+      form.querySelector('.checkout-address').hidden=pickupMode;
+      form.querySelector('.checkout-postal-code').hidden=pickupMode;
+      form.querySelector('[name="address"]').disabled=pickupMode;
+      form.querySelector('[name="postal_code"]').disabled=pickupMode;
       clearPoints();
     };
     updateProvider();
@@ -58,13 +59,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(loadPoints){
       loadPoints.addEventListener('click',async()=>{
         invalidate();clearPoints();
-        const currentRevision=pointsRevision;
+        const currentRevision=pointsRevision,currentProvider=provider();
         loadPoints.disabled=true;loadPoints.textContent='ЗАГРУЖАЕМ ПВЗ…';message.textContent='';
         try{
           const payload=await request('pickup_points');
-          if(currentRevision!==pointsRevision||provider()!=='yandex')return;
+          if(currentRevision!==pointsRevision||provider()!==currentProvider)return;
           points=payload.points||[];
-          if(!points.length)throw new Error('В этом городе нет доступных ПВЗ Яндекс Доставки.');
+          if(!points.length)throw new Error('В этом городе нет доступных ПВЗ выбранной службы.');
           pointSelect.replaceChildren(new Option('Выберите пункт выдачи',''));
           points.forEach(point=>pointSelect.add(new Option(`${point.name} — ${point.address}`,point.id)));
           pointSelect.disabled=false;
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       invalidate();
       const currentRevision=revision;
       message.textContent='';
-      if(provider()==='yandex'&&!pointSelect?.value){message.textContent='Сначала выберите ПВЗ Яндекс Доставки.';return;}
+      if(isPickup()&&!pointSelect?.value){message.textContent='Сначала выберите ПВЗ выбранной службы.';return;}
       calculate.disabled=true;calculate.textContent='РАССЧИТЫВАЕМ…';
       try{
         const payload=await request('delivery');
