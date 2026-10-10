@@ -26,13 +26,17 @@ $image = $product['IMAGE'] ?: '/local/assets/product-placeholder.svg';
             </aside>
             <div class="checkout-panel">
                 <div class="checkout-heading"><span class="number">ДАННЫЕ ПОКУПАТЕЛЯ</span><h2>Куда доставить заказ</h2><p>Стоимость доставки рассчитаем по адресу</p></div>
-        <form class="checkout-form" novalidate>
+        <form class="checkout-form" data-product-price="<?=(float) $product['PRICE']?>" novalidate>
             <?php bitrix_sessid_post(); ?>
             <input type="hidden" name="product_id" value="<?=(int) $product['ID']?>">
             <label class="checkout-honeypot" aria-hidden="true">Компания<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
             <fieldset><legend>01 / Получатель</legend><div class="checkout-fields"><label>ИМЯ *<input name="customer_name" type="text" maxlength="100" required autocomplete="name"></label><label>ТЕЛЕФОН *<input name="phone" type="tel" maxlength="30" required autocomplete="tel" placeholder="+7 ___ ___-__-__"></label><label>EMAIL<input name="email" type="email" maxlength="150" autocomplete="email"></label><label>КОЛИЧЕСТВО<input name="quantity" type="number" value="1" min="1" max="10"></label></div></fieldset>
             <fieldset><legend>02 / Адрес</legend><div class="checkout-fields"><label>ГОРОД *<input name="city" type="text" maxlength="100" required autocomplete="address-level2"></label><label>ИНДЕКС *<input name="postal_code" type="text" maxlength="6" inputmode="numeric" required autocomplete="postal-code"></label><label class="checkout-wide">АДРЕС *<input name="address" type="text" maxlength="250" required autocomplete="street-address"></label></div><button class="checkout-calculate" type="button">РАССЧИТАТЬ ДОСТАВКУ</button></fieldset>
-            <fieldset><legend>03 / Доставка</legend><div class="delivery-options"><p>Заполните адрес и рассчитайте доступные варианты.</p></div></fieldset>
+            <fieldset><legend>03 / Доставка</legend><div class="delivery-options">
+                <label class="delivery-option"><input type="radio" name="delivery_provider" value="cdek" checked><span><b>СДЭК</b><small>Курьер до двери</small></span></label>
+                <label class="delivery-option"><input type="radio" name="delivery_provider" value="russian_post"><span><b>Почта России</b><small>Расчёт пока не подключён</small></span></label>
+                <label class="delivery-option"><input type="radio" name="delivery_provider" value="other"><span><b>Другая служба доставки</b><small>Служба будет уточнена</small></span></label>
+            </div><input type="hidden" name="delivery_quote" value=""></fieldset>
             <label>КОММЕНТАРИЙ<textarea name="comment" maxlength="1000" rows="3"></textarea></label>
             <div class="checkout-summary"></div>
             <div class="checkout-message" role="status" aria-live="polite"></div>
