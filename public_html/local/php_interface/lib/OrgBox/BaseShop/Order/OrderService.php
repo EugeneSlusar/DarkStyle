@@ -21,19 +21,24 @@ final class OrderService
     ) {
     }
 
-    public function deliveryOptions(int $productId, int $quantity, string $city, string $postalCode, string $provider): array
+    public function deliveryOptions(int $productId, int $quantity, string $city, string $postalCode, string $provider, string $pickupPointId = ''): array
     {
         $product = $this->requireProduct($productId);
-        $request = $this->deliveryRequest($product, $quantity, $city, $postalCode);
+        $request = $this->deliveryRequest($product, $quantity, $city, $postalCode, $pickupPointId);
 
         return array_map(static fn ($result): array => $result->toArray(), [$this->delivery->calculate($provider, $request)]);
+    }
+
+    public function pickupPoints(string $provider, string $city): array
+    {
+        return $this->delivery->pickupPoints($provider, $city);
     }
 
     public function place(array $input): array
     {
         $data = $this->validator->validate($input);
         $product = $this->requireProduct($data['product_id']);
-        $request = $this->deliveryRequest($product, $data['quantity'], $data['city'], $data['postal_code']);
+        $request = $this->deliveryRequest($product, $data['quantity'], $data['city'], $data['postal_code'], $data['pickup_point_id']);
         $delivery = $this->delivery->calculate($data['delivery_provider'], $request);
         if (!$delivery->success) {
             throw new InvalidArgumentException($delivery->error ?: 'Не удалось рассчитать доставку.');
@@ -55,8 +60,9 @@ final class OrderService
             'phone' => $data['phone'],
             'email' => $data['email'],
             'city' => $data['city'],
-            'postal_code' => $data['postal_code'],
-            'address' => $data['address'],
+            'postal_code' => $delivery->pickupPointId !== '' ? $delivery->pickupPointPostalCode : $data['postal_code'],
+            'address' => $delivery->pickupPointId !== ''
+                ? $delivery->pickupPointAddress . ' (ПВЗ: ' . $delivery->pickupPointId . ')' : $data['address'],
             'delivery_provider' => $delivery->provider,
             'delivery_service' => $delivery->service,
             'delivery_price' => $delivery->price,
@@ -83,7 +89,7 @@ final class OrderService
         return $product;
     }
 
-    private function deliveryRequest(array $product, int $quantity, string $city, string $postalCode): DeliveryRequest
+    private function deliveryRequest(array $product, int $quantity, string $city, string $postalCode, string $pickupPointId = ''): DeliveryRequest
     {
         return new DeliveryRequest(
             trim($city),
@@ -92,7 +98,8 @@ final class OrderService
             (float) $product['LENGTH'],
             (float) $product['WIDTH'],
             (float) $product['HEIGHT'] * max(1, $quantity),
-            (float) $product['PRICE'] * max(1, $quantity)
+            (float) $product['PRICE'] * max(1, $quantity),
+            $pickupPointId
         );
     }
 }

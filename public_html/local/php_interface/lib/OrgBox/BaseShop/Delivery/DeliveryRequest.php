@@ -13,7 +13,8 @@ final class DeliveryRequest
         public readonly float $length,
         public readonly float $width,
         public readonly float $height,
-        public readonly float $declaredPrice
+        public readonly float $declaredPrice,
+        public readonly string $pickupPointId = ''
     ) {
     }
 

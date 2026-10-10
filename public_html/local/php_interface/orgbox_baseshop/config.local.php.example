@@ -4,12 +4,16 @@
 return [
     'site_name' => 'Название магазина',
     'theme' => 'dark',
+    'origin_city' => 'Тольятти',
     'manager_email' => 'orders@example.test',
     'phone' => '+7 000 000-00-00',
     'cdek_client_id' => '',
     'cdek_client_secret' => '',
     'cdek_origin_code' => 0, // Код города отправления в справочнике СДЭК.
     'cdek_sandbox' => false,
+    'yandex_token' => '',
+    'yandex_origin_station_id' => '', // ID склада отправки в Яндекс Доставке.
+    'yandex_sandbox' => false,
     'russian_post_token' => '',
     'russian_post_key' => '',
 ];

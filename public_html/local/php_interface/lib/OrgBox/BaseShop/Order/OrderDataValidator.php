@@ -19,6 +19,7 @@ final class OrderDataValidator
             'city' => $this->text($input['city'] ?? '', 100),
             'postal_code' => $this->text($input['postal_code'] ?? '', 12),
             'address' => $this->text($input['address'] ?? '', 250),
+            'pickup_point_id' => $this->text($input['pickup_point_id'] ?? '', 100),
             'delivery_provider' => $this->text($input['delivery_provider'] ?? '', 30),
             'comment' => $this->text($input['comment'] ?? '', 1000),
         ];
@@ -35,14 +36,18 @@ final class OrderDataValidator
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Укажите корректный email.');
         }
-        if ($data['city'] === '' || $data['address'] === '') {
+        if ($data['city'] === '' || ($data['delivery_provider'] !== 'yandex' && $data['address'] === '')) {
             throw new InvalidArgumentException('Укажите город и адрес доставки.');
         }
-        if (!preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
+        if ($data['delivery_provider'] !== 'yandex' && !preg_match('/^[0-9]{5,6}$/', $data['postal_code'])) {
             throw new InvalidArgumentException('Укажите корректный почтовый индекс.');
         }
-        if (!in_array($data['delivery_provider'], ['cdek', 'russian_post', 'other'], true)) {
+        if (!in_array($data['delivery_provider'], ['cdek', 'russian_post', 'yandex'], true)) {
             throw new InvalidArgumentException('Выберите способ доставки.');
+        }
+
+        if ($data['delivery_provider'] === 'yandex' && $data['pickup_point_id'] === '') {
+            throw new InvalidArgumentException('Выберите ПВЗ Яндекс Доставки.');
         }
 
         return $data;
