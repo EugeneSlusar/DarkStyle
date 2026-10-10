@@ -1,0 +1,2 @@
+#global_menu_orgbox .adm-main-menu-item-icon{background:none;position:relative}
+#global_menu_orgbox .adm-main-menu-item-icon:after{content:'О';position:absolute;inset:4px;text-align:center;font:bold 30px/40px Arial,sans-serif;color:#a9cfe0}
