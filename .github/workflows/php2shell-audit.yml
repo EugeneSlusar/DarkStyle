@@ -96,3 +96,42 @@ jobs:
           fi
           echo "=== AUDIT_DONE (NO SERVER CHANGES) ==="
           REMOTE_AUDIT
+
+      - name: Inspect PHP selection hints for this website (read only)
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+          printf -v safe_path '%q' "$DEPLOY_PATH"
+          ssh -i "$HOME/.ssh/deploy_key" \
+            -p "${DEPLOY_PORT:-22}" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" "bash -s -- $safe_path" <<'REMOTE_HINTS'
+          set -uo pipefail
+          root="$1"
+          echo "=== WEBSITE PHP CONFIG HINTS (READ ONLY) ==="
+          if [[ -d "$root/public_html" && -f "$root/public_html/index.php" ]]; then
+            echo "PROJECT_DOCUMENT_ROOT=present"
+          else
+            echo "PROJECT_DOCUMENT_ROOT=not-found-at-expected-path"
+          fi
+          for location in "$root" "$root/public_html"; do
+            if [[ -f "$location/.htaccess" ]]; then
+              hints="$(grep -Eio '(php[0-9]{2}|php[0-9]\\.[0-9]|AddHandler|SetHandler)' "$location/.htaccess" 2>/dev/null | sort -u | tr '\n' ' ' || true)"
+              printf 'HTACCESS_PHP_HINTS=%s\n' "${hints:-none}"
+            else
+              echo "HTACCESS_PHP_HINTS=not-present"
+            fi
+          done
+          for folder in "$root" "$(dirname "$root")"; do
+            base="$(basename "$folder")"
+            if [[ "$base" =~ ^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$ ]]; then
+              printf 'DOMAIN_CANDIDATE=%s\n' "$base"
+            fi
+          done
+          echo "=== END WEBSITE PHP CONFIG HINTS ==="
+          REMOTE_HINTS
