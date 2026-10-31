@@ -135,3 +135,54 @@ jobs:
           done
           echo "=== END WEBSITE PHP CONFIG HINTS ==="
           REMOTE_HINTS
+
+      - name: Verify real HTTP PHP runtime with temporary token-protected probe
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+          printf -v safe_path '%q' "$DEPLOY_PATH"
+          ssh -i "$HOME/.ssh/deploy_key" \
+            -p "${DEPLOY_PORT:-22}" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" "bash -s -- $safe_path" <<'REMOTE_WEB_PROBE'
+          set -euo pipefail
+          docroot="$1/public_html"
+          if [[ ! -f "$docroot/index.php" || ! -w "$docroot" ]]; then
+            echo "WEB_PHP_PROBE=skipped-no-writable-document-root"
+            exit 0
+          fi
+          token="$(head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+          probe="$(mktemp "$docroot/.php-cve-audit-XXXXXXXX.php")"
+          trap 'rm -f -- "$probe"' EXIT
+          cat > "$probe" <<'PHP'
+          <?php
+          if (($_GET['token'] ?? '') !== '__AUDIT_TOKEN__') {
+              http_response_code(404);
+              exit;
+          }
+          header('Content-Type: text/plain; charset=utf-8');
+          echo 'PHP_WEB_VERSION=', PHP_VERSION, "\n", 'PHP_WEB_SAPI=', PHP_SAPI, "\n";
+          PHP
+          sed -i "s/__AUDIT_TOKEN__/$token/" "$probe"
+          chmod 0644 "$probe"
+          for host in dark-style.ru dark-style.orgbox.net; do
+            if result="$(curl -fsSL --max-time 20 --connect-timeout 8 \
+                 "https://$host/$(basename "$probe")?token=$token" 2>/dev/null)"; then
+              if [[ "$result" == PHP_WEB_VERSION=* ]]; then
+                echo "SITE=$host"
+                printf '%s\n' "$result"
+                echo "WEB_PHP_PROBE=confirmed"
+              else
+                echo "WEB_PHP_PROBE=unexpected-response"
+              fi
+            else
+              echo "WEB_PHP_PROBE=unreachable-or-wrong-document-root"
+            fi
+          done
+          echo "WEB_PHP_PROBE=temporary-file-auto-removed"
+          REMOTE_WEB_PROBE
