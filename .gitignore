@@ -8,3 +8,6 @@
 
 # Per-installation Bitrix settings and credentials.
 public_html/local/php_interface/orgbox_baseshop/config.local.php
+
+# SiteOps (MCP) is installed on the server separately and updated from its admin page.
+/public_html/site.ops/
